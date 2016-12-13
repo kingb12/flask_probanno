@@ -5,18 +5,20 @@ from flask import flash
 from werkzeug.utils import secure_filename
 
 import data.database as db
-from controllers import session_management, model_management
+from controllers import session_management, model_management, probanno_management
 
 PUT = 'PUT'
 POST = 'POST'
 GET = 'GET'
 
 DATABASE = '/data/probannoweb.db'
-UPLOAD_FOLDER = '/tmp'
+UPLOAD_FOLDER = '/tmp/'
+MODEL_TEMPLATES_FOLDER = '/../probanno_standalone/templates/'
 ALLOWED_EXTENSIONS = {'json'}
 
 # Set up on first run
 app = Flask(__name__)
+app.config['MODEL_TEMPLATES'] = os.path.dirname(os.path.realpath(__file__)) + MODEL_TEMPLATES_FOLDER
 app.config['UPLOAD_FOLDER'] = os.path.dirname(os.path.realpath(__file__)) + UPLOAD_FOLDER
 db.set_db(os.path.dirname(os.path.realpath(__file__)) + DATABASE)
 
@@ -33,7 +35,7 @@ def check_session():
         return resp
 
 
-@app.route('/api/io/uploadmodel', methods=['GET', 'POST'])
+@app.route('/api/io/uploadmodel', methods=[GET, POST])
 def upload_model():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -48,10 +50,9 @@ def upload_model():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            print app.config['UPLOAD_FOLDER'], filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            model_management.load_model(filename)
-            os.remove(filename)
+            model_management.load_model(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return 'Saved!'
     return '''
     <!doctype html>
@@ -62,6 +63,26 @@ def upload_model():
          <input type=submit value=Upload>
     </form>
     '''  # TODO: Replace this with something nicer. Models View page, hiding the 'get' aspect of this API?
+
+
+@app.route('/api/probanno/calculate', methods=[GET])
+def get_reaction_probabilities():
+    return probanno_management.get_reaction_probabilities(app)
+
+
+@app.route('/api/model/gapfill')
+def gapfill():
+    return model_management.gapfill_model(app)
+
+
+@app.route('/api/model/runfba')
+def run_fba():
+    return model_management.run_fba()
+
+
+@app.route('/api/model/addreactions')
+def add_reactions():
+    return "Not Implemented"
 
 
 def allowed_file(filename):
