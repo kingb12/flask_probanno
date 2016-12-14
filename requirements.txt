@@ -1,0 +1,25 @@
+click==6.6
+-e git+https://github.com/kingb12/cobrapy.git@b175891dfa24d9355a4ac9f5c164dfe1c22d8ef8#egg=cobra
+Cython==0.25.1
+docopt==0.6.2
+Flask==0.11.1
+get==0.0.0
+itsdangerous==0.24
+Jinja2==2.8
+lxml==3.6.4
+MarkupSafe==0.23
+numpy==1.11.2
+post==0.0.0
+-e git+https://github.com/kingb12/ProbAnno-Standalone.git@289a156b561ffb71282e26d3c54944addcac29c0#egg=probanno
+public==0.0.0
+python-libsbml==5.13.0
+query-string==0.0.0
+records==0.5.0
+request==0.0.0
+requests==2.12.1
+scipy==0.18.1
+setupfiles==0.0.0
+six==1.10.0
+SQLAlchemy==1.1.4
+tablib==0.11.2
+Werkzeug==0.11.11
