@@ -1,4 +1,4 @@
-import sqlite3
+from flask_sqlalchemy import SQLAlchemy
 
 __database = None
 
@@ -19,52 +19,43 @@ INSERT_INTO_MODEL_QUERY = 'INSERT INTO ' + MODEL + MODEL_SCHEMA + ' VALUES (?, ?
 INSERT_INTO_PROBANNO_QUERY = 'INSERT INTO ' + PROBANNO + PROBANNO_SCHEMA + ' VALUES (?, ?, ?)'
 
 
-
-def set_db(filename):
+def set_db(app, filename):
     global __database
     """
     Sets the sqlite3 DB to the given file
     :param filename: path to DB file
     :return: None
     """
-    print filename
-    __database = sqlite3.connect(filename)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + filename
+    __database = SQLAlchemy(app)
 
 
 def find_by_id(table, obj_id):
     if table not in TABLES:
         return None
-    curs = __database.cursor()
+    curs = __database.engine
     cmd = FIND_BY_ID_QUERY.format(table, TABLES[table])
     # print obj_id
-    curs.execute(cmd, [obj_id])
-    result = curs.fetchone()
-    __database.commit()
-    return result
+    result = curs.execute(cmd, [obj_id]).fetchone()
+    return tuple(result.values())
 
 
 def find_model(session_id, model_id):
-    curs = __database.cursor()
-    curs.execute(FIND_MODEL_QUERY, [session_id, model_id])
-    result = curs.fetchone()
-    __database.commit()
-    return result
+    curs = __database.engine
+    result = curs.execute(FIND_MODEL_QUERY, [session_id, model_id]).fetchone()
+    return None if result is None else result.values()
 
 
 def insert_session(session_id, log_out_time):
-    curs = __database.cursor()
-    # print session_id, log_out_time
+    curs = __database.engine
     curs.execute(INSERT_INTO_SESSION_QUERY, [session_id, log_out_time])
-    __database.commit()
 
 
 def insert_model(sid, mid, model):
-    curs = __database.cursor()
+    curs = __database.engine
     curs.execute(INSERT_INTO_MODEL_QUERY, [sid, mid, model])
-    __database.commit()
 
 
 def insert_probanno(fasta_id, sid, likelihoods):
-    curs = __database.cursor()
+    curs = __database.engine
     curs.execute(INSERT_INTO_PROBANNO_QUERY, [fasta_id, sid, likelihoods])
-    __database.commit()

@@ -20,7 +20,7 @@ ALLOWED_EXTENSIONS = {'json'}
 app = Flask(__name__)
 app.config['MODEL_TEMPLATES'] = os.path.dirname(os.path.realpath(__file__)) + MODEL_TEMPLATES_FOLDER
 app.config['UPLOAD_FOLDER'] = os.path.dirname(os.path.realpath(__file__)) + UPLOAD_FOLDER
-db.set_db(os.path.dirname(os.path.realpath(__file__)) + DATABASE)
+db.set_db(app, os.path.dirname(os.path.realpath(__file__)) + DATABASE)
 
 
 @app.route('/')
@@ -84,6 +84,9 @@ def run_fba():
 def add_reactions():
     return "Not Implemented"
 
+@app.route('/hello')
+def hello():
+    return 'hello'
 
 def allowed_file(filename):
     return '.' in filename and \

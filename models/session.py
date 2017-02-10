@@ -13,8 +13,7 @@ def create_new_session(log_out_time=END_OF_TIME):
     """
     session_id = uuid.uuid4()
     while session_exists(session_id):
-        session_id = uuid.uuid4()
-        print 'WOWZA'  # this should never print, odds of UUID conflict
+      session_id = uuid.uuid4()
     db.insert_session(str(session_id), log_out_time)
     # print "session id: ", str(session_id)
     return str(session_id)
