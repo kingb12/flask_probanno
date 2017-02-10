@@ -7,7 +7,6 @@ Flask-SQLAlchemy==2.1
 get==0.0.0
 itsdangerous==0.24
 Jinja2==2.8
-lxml==3.6.4
 MarkupSafe==0.23
 numpy==1.11.2
 post==0.0.0
