@@ -1,11 +1,13 @@
 import os
 
-from flask import Flask, request, redirect, make_response
+from flask import Flask, request, redirect, make_response, render_template
 from flask import flash
 from werkzeug.utils import secure_filename
 
 import data.database as db
 from controllers import session_management, model_management, probanno_management
+
+import ConfigParser
 
 PUT = 'PUT'
 POST = 'POST'
@@ -18,22 +20,22 @@ ALLOWED_EXTENSIONS = {'json'}
 
 # Set up on first run
 app = Flask(__name__)
-app.config['MODEL_TEMPLATES'] = os.path.dirname(os.path.realpath(__file__)) + MODEL_TEMPLATES_FOLDER
+config = ConfigParser.ConfigParser()
+config.read(os.path.realpath(__file__) + '/deploy.cfg')
+app.config['MODEL_TEMPLATES'] = os.path.dirname(os.path.realpath(__file__)) + MODEL_TEMPLATES_FOLDER if not config.has_option('flask_probanno', 'model_templates_folder') else config.get('flask_probanno', 'model_templates_folder')
 app.config['UPLOAD_FOLDER'] = os.path.dirname(os.path.realpath(__file__)) + UPLOAD_FOLDER
 db.set_db(app, os.path.dirname(os.path.realpath(__file__)) + DATABASE)
 
 
 @app.route('/')
-def check_session():
+def home_page():
     if session_management.has_session():
         session = session_management.get_session_id()
-        return "Hello " + str(session) + " your session ID in the DB is " + str(session_management.get_session_id())
     else:
         session_id = session_management.prepare_new_session()
         resp = make_response("Hello Stranger")
         resp.set_cookie(session_management.SESSION_ID, session_id)
-        return resp
-
+    return render_template('index.html')
 
 @app.route('/api/io/uploadmodel', methods=[GET, POST])
 def upload_model():
