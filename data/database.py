@@ -37,7 +37,7 @@ def find_by_id(table, obj_id):
     cmd = FIND_BY_ID_QUERY.format(table, TABLES[table])
     # print obj_id
     result = curs.execute(cmd, [obj_id]).fetchone()
-    return tuple(result.values())
+    return tuple(result.values()) if result is not None else None
 
 
 def find_model(session_id, model_id):

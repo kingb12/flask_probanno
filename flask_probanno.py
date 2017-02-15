@@ -11,9 +11,9 @@ PUT = 'PUT'
 POST = 'POST'
 GET = 'GET'
 
-DATABASE = '/data/probannoweb.db'
+DATABASE = '/data/db/probannoweb.db'
 UPLOAD_FOLDER = '/tmp/'
-MODEL_TEMPLATES_FOLDER = '/../probanno_standalone/templates/'
+MODEL_TEMPLATES_FOLDER = '/probannoenv/src/probanno/templates/'
 ALLOWED_EXTENSIONS = {'json'}
 
 # Set up on first run
