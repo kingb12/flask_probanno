@@ -31,7 +31,7 @@
           <div class="rightSide">
             <div class="proteome"></div>
             <label>Taxonomy ID:
-              <input type="text" name="taxid" maxlength="7" pattern="^\d+$" title="Max Length: 7. This field accepts only numbers." />
+              <input type="text" name="fasta_id" maxlength="7" pattern="^\d+$" title="Max Length: 7. This field accepts only numbers." />
 <br />Browse available proteomes at <a target="_blank" href="http://www.uniprot.org/proteomes/">UniProt</a>. Examples:
 <i>
 <br />&nbsp;&nbsp;224308 (Bacillus subtilis)
@@ -39,7 +39,7 @@
 </i>
             </label>
             <br /><br/>
-            <label class="fileUpload">OR upload a proteome fasta file: <input class="fileUpload" type="file" name="uploaded_file" size="30" maxlength="200">
+            <label class="fileUpload">OR upload a proteome fasta file: <input class="fileUpload" type="file" name="fasta" size="30" maxlength="200">
             </label>
           </div>
         </div>
@@ -59,27 +59,7 @@
             </label>
           </div>
         </div>
-        <div class="wrapper">
-          <div class="leftSide">
-            <h4>3) Model for gap-filling</h4>
-          </div>
-          <div class="rightSide">
-            <div class="model"></div>
-            <label class="fileUpload">Upload a metabolic model if gap-filling is desired:
-              <input class="fileUpload" type="file" name="uploaded_model" size="30" maxlength="200">
-            </label>
-            <br /><br/>
-		    <label>OR select previously uploaded model:
-		      <select id="model" name="model">
-			<option value="None" selected="selected">----</option>
-			<option value="Model1">Model1</option>
-			<option value="Model2">Model2</option>
-			<option value="Model3">Model3</option>
-		      </select>
-		    </label>
-          </div>
-        </div>
-        <input class="submit" role="button" aria-pressed="false" type="submit" name="submit" id="submit">
+        <input class="submit" formaction="http://localhost:5000/api/probanno/calculate" role="button" aria-pressed="false" type="submit" name="submit" id="submit">
       </form>
     </fieldset>
   </div class="closesWrapper">

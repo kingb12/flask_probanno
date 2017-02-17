@@ -3,6 +3,7 @@ import os
 from flask import Flask, request, redirect, make_response, render_template
 from flask import flash
 from werkzeug.utils import secure_filename
+import utils
 
 import data.database as db
 from controllers import session_management, model_management, probanno_management
@@ -15,8 +16,8 @@ GET = 'GET'
 
 DATABASE = '/data/db/probannoweb.db'
 UPLOAD_FOLDER = '/tmp/'
-MODEL_TEMPLATES_FOLDER = '/probannoenv/src/probanno/templates/'
-ALLOWED_EXTENSIONS = {'json'}
+MODEL_TEMPLATES_FOLDER = '/../probanno_standalone/templates/'
+ALLOWED_EXTENSIONS = {'json', 'fasta', 'fa'}
 
 # Set up on first run
 app = Flask(__name__)
@@ -29,13 +30,13 @@ db.set_db(app, os.path.dirname(os.path.realpath(__file__)) + DATABASE)
 
 @app.route('/')
 def home_page():
+    resp = make_response(render_template("index.html"))
     if session_management.has_session():
         session = session_management.get_session_id()
     else:
         session_id = session_management.prepare_new_session()
-        resp = make_response("Hello Stranger")
         resp.set_cookie(session_management.SESSION_ID, session_id)
-    return render_template('index.html')
+    return resp
 
 @app.route('/api/io/uploadmodel', methods=[GET, POST])
 def upload_model():
@@ -45,17 +46,10 @@ def upload_model():
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            model_management.load_model(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return 'Saved!'
+        filename = utils.upload_file(app, file, ALLOWED_EXTENSIONS)
+        model_management.load_model(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return 'Saved!'
     return '''
     <!doctype html>
     <title>Upload new Model (JSON format)</title>
@@ -64,13 +58,13 @@ def upload_model():
       <p><input type=file name=file>
          <input type=submit value=Upload>
     </form>
-    '''  # TODO: Replace this with something nicer. Models View page, hiding the 'get' aspect of this API?
+    '''
+    # TODO: Replace this with something nicer. Models View page, hiding the 'get' aspect of this API?
 
 
-@app.route('/api/probanno/calculate', methods=[GET])
+@app.route('/api/probanno/calculate', methods=[GET, POST])
 def get_reaction_probabilities():
     return probanno_management.get_reaction_probabilities(app)
-
 
 @app.route('/api/model/gapfill')
 def gapfill():
@@ -86,9 +80,11 @@ def run_fba():
 def add_reactions():
     return "Not Implemented"
 
+
 @app.route('/hello')
 def hello():
     return 'hello'
+
 
 def allowed_file(filename):
     return '.' in filename and \
