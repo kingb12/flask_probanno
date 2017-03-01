@@ -1,5 +1,5 @@
 from flask import request
-import probanno.probanno as probanno
+import probanno
 import session_management
 import data.database as db
 import utils
@@ -35,7 +35,9 @@ def get_reaction_probabilities(app, fasta_id=None, fasta_file=None):
         fasta_file = get_fasta_by_id(app, fasta_id) if fasta_file is None else fasta_file
         template = request.form[TEMPLATE]
     template_file = TEMPLATE_FILES[template] if template in TEMPLATE_FILES else TEMPLATE_FILES[DEFAULT_TEMPLATE]
-    likelihoods = db.find_by_id(db.PROBANNO, fasta_id)
+    likelihoods = None
+    if fasta_id is not None and fasta_id != '':
+        likelihoods = db.find_by_id(db.PROBANNO, fasta_id)
     if likelihoods is not None:
         likelihoods = likelihoods[-1]
     if likelihoods is not None:
@@ -45,7 +47,8 @@ def get_reaction_probabilities(app, fasta_id=None, fasta_file=None):
                                                            template_model_file=app.config['MODEL_TEMPLATES'] +
                                                            template_file,
                                                            genome_id=gen_id)
-    db.insert_probanno(fasta_id, session, likelihoods.to_json())
+    if fasta_id is not None and fasta_id != '':
+        db.insert_probanno(fasta_id, session, likelihoods.to_json())
     return likelihoods.to_json()
 
 

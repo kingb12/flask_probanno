@@ -3,6 +3,7 @@ import probanno_management
 from flask import request, make_response
 import data.database as db
 import session_management
+import json
 
 MICROBIAL = 'Microbial'
 
@@ -11,11 +12,14 @@ def load_model(filename):
     model = cobra_modeling.from_json_file(filename)
     session = session_management.get_session_id()
     model_id = model.id if model.id is not None else str(request.date)
-    if session is not None:
+    if session is not None and db.find_model(session, model_id) is None:
         db.insert_model(session, model_id, cobra_modeling.model_to_json(model))
     else:
         # TODO: Make this a 400
-        raise EnvironmentError("A session must be defined in order to save a model")
+        if session is None:
+            return "Session-less state"
+        else:
+            return "model already uploaded"
 
 
 def run_fba():
@@ -48,9 +52,13 @@ def gapfill_model(app):
 
 
 def save_model(model_id, session_id, model):
-    if session_id is not None and model_id is not None:
+    if session_id is not None and model_id is not None and db.find_model(session_id, model_id) is None:
         db.insert_model(session_id, model_id, cobra_modeling.model_to_json(model))
 
+def list_models():
+    # session_id = request.args['sid']
+    session_id = session_management.get_session_id()
+    return json.dumps(db.list_models(session_id))
 
 def _retrieve_model(session_id, model_id):
     return cobra_modeling.from_json(db.find_model(session_id, model_id)[-1])

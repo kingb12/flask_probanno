@@ -2,7 +2,6 @@ import os
 
 from flask import Flask, request, redirect, make_response, render_template
 from flask import flash
-from werkzeug.utils import secure_filename
 import utils
 
 import data.database as db
@@ -30,6 +29,16 @@ db.set_db(app, os.path.dirname(os.path.realpath(__file__)) + DATABASE)
 
 @app.route('/')
 def home_page():
+    resp = make_response(render_template("listprobannos.html"))
+    if session_management.has_session():
+        session = session_management.get_session_id()
+    else:
+        session_id = session_management.prepare_new_session()
+        resp.set_cookie(session_management.SESSION_ID, session_id)
+    return resp
+
+@app.route('/home')
+def home_pag2e():
     resp = make_response(render_template("index.html"))
     if session_management.has_session():
         session = session_management.get_session_id()
@@ -37,6 +46,7 @@ def home_page():
         session_id = session_management.prepare_new_session()
         resp.set_cookie(session_management.SESSION_ID, session_id)
     return resp
+
 
 @app.route('/api/io/uploadmodel', methods=[GET, POST])
 def upload_model():
@@ -85,7 +95,9 @@ def add_reactions():
 def hello():
     return 'hello'
 
-
+@app.route('/api/list/models')
+def list_models():
+    return model_management.list_models()
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
