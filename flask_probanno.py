@@ -29,7 +29,7 @@ db.set_db(app, os.path.dirname(os.path.realpath(__file__)) + DATABASE)
 
 @app.route('/')
 def home_page():
-    resp = make_response(render_template("listprobannos.html"))
+    resp = make_response(render_template("index.html"))
     if session_management.has_session():
         session = session_management.get_session_id()
     else:
@@ -39,7 +39,7 @@ def home_page():
 
 @app.route('/home')
 def home_pag2e():
-    resp = make_response(render_template("index.html"))
+    resp = make_response(render_template("listprobannos.html"))
     if session_management.has_session():
         session = session_management.get_session_id()
     else:
@@ -95,9 +95,14 @@ def add_reactions():
 def hello():
     return 'hello'
 
-@app.route('/api/list/models')
+@app.route('/api/list/model')
 def list_models():
     return model_management.list_models()
+
+@app.route('/api/list/probanno')
+def list_probannos():
+    return probanno_management.list_probannos()
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS

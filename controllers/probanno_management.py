@@ -3,6 +3,7 @@ import probanno
 import session_management
 import data.database as db
 import utils
+import json
 
 # TODO: (PW-10) Make this relative reference cleaner with a config file
 # These correspond to the drop down menu items in the view
@@ -60,3 +61,6 @@ def get_fasta_by_id(app, fasta_id):
     """
     return probanno.get_fasta_by_id(fasta_id, app.config['UPLOAD_FOLDER'] + str(fasta_id) + '.fasta')
 
+
+def list_probannos():
+    return json.dumps(db.list_probannos())

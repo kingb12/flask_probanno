@@ -18,6 +18,7 @@ INSERT_INTO_SESSION_QUERY = 'INSERT INTO ' + SESSION + SESSION_SCHEMA + ' VALUES
 INSERT_INTO_MODEL_QUERY = 'INSERT INTO ' + MODEL + MODEL_SCHEMA + ' VALUES (?, ?, ?)'
 INSERT_INTO_PROBANNO_QUERY = 'INSERT INTO ' + PROBANNO + PROBANNO_SCHEMA + ' VALUES (?, ?, ?)'
 LIST_MODELS_QUERY = 'SELECT mid FROM ' + MODEL + ' WHERE sid = ?'
+LIST_PROBANNOS_QUERY = 'SELECT fasta_id FROM ' + PROBANNO
 
 def set_db(app, filename):
     global __database
@@ -64,4 +65,10 @@ def insert_probanno(fasta_id, sid, likelihoods):
 def list_models(session_id):
     curs = __database.engine
     result = curs.execute(LIST_MODELS_QUERY, [session_id]).fetchall()
+    return None if result is None else [r[0] for r in result]
+
+
+def list_probannos():
+    curs = __database.engine
+    result = curs.execute(LIST_PROBANNOS_QUERY, []).fetchall()
     return None if result is None else [r[0] for r in result]

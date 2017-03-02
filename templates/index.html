@@ -5,18 +5,123 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>ProbAnno - probabilistic annotation of proteomes</title>
-  <link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico">
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-  <link rel="stylesheet" href="css/typography.css" media="screen">
-  <link rel="stylesheet" href="css/layout.css" media="screen">
-  <link rel="stylesheet" href="css/style.css" media="screen">
-  <link rel="stylesheet" href="css/mediaQueries.css" media="screen">
+  <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico">
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" media="screen">
+
 </head>
 
-<body>
+<body onload="listModels('models_tbody'); listProbannos('probannos_tbody')">
   <header role="banner">
     <img class="ProbAnnoLogo" src="../static/ProbAnnoBanner.png" alt="Image of systems biology network. Text reads 'ProbAnno - Probabilistic annotation tool for metabolic modeling'.">
   </header>
+  <fieldset>
+      <legend> Download a Probabilistic Annotation: </legend>
+ <div id="probanno_wrapper" class="dataTables_wrapper">
+        <div class="dataTables_scroll">
+            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; padding-right: 0px;">
+                    <table class="display dataTable" cellspacing="8" width="100%" role="grid" style="margin-left: 0px;">
+                        <thead width="100%">
+						    <tr role="row">
+                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-sort="ascending" aria-label="Name: activate to sort column descending">Model Name</th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-label="Position: activate to sort column ascending">Gapfill Model</th>
+                            </tr>
+					    </thead>
+                    </table>
+                </div>
+            </div>
+            <div id="probanno_div" class="dataTables_scrollBody" style="position: relative; overflow: auto; max-height: 200px; width: 100%;">
+                <table id="probanno" class="display dataTable" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+                    <thead>
+                        <tr role="row" style="height: 0px;">
+                            <th class="sorting_asc" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="Name: activate to sort column descending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Model Name</div></th>
+                            <th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Position: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Gapfill Model</div></th>
+                        </tr>
+                    </thead>
+                    <tbody id="probannos_tbody">
+                    </tbody>
+                    <tfoot>
+                        <tr style="height: 0px;">
+                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 137px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Model Name</div></th>
+                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 214px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Gapfill Model</div></th>
+                        </tr>
+                    </tfoot>
+
+                </table>
+            </div>
+            <div class="dataTables_scrollFoot" style="overflow: hidden; border: 0px; width: 100%;">
+                <div class="dataTables_scrollFootInner" style="padding-right: 0px;">
+                    <table class="display dataTable" cellspacing="0" width="100%" role="grid" style="margin-left: 0px;">
+                        <tfoot>
+                            <tr>
+                                <th rowspan="1" colspan="1" style="width: 50%;"></th>
+                                <th rowspan="1" colspan="1" style="width: 50%;"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+     <p>
+         Select a Probabilistic Annotation to Download (Run one above).
+     </p>
+  </fieldset>
+  <fieldset>
+      <legend> Gapfill a Metabolic Model: </legend>
+ <div id="model_wrapper" class="dataTables_wrapper">
+        <div class="dataTables_scroll">
+            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; padding-right: 0px;">
+                    <table class="display dataTable" cellspacing="8" width="100%" role="grid" style="margin-left: 0px;">
+                        <thead width="100%">
+						    <tr role="row">
+                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-sort="ascending" aria-label="Name: activate to sort column descending">Model Name</th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-label="Position: activate to sort column ascending">Gapfill Model</th>
+                            </tr>
+					    </thead>
+                    </table>
+                </div>
+            </div>
+            <div id="models_div" class="dataTables_scrollBody" style="position: relative; overflow: auto; max-height: 200px; width: 100%;">
+                <table id="models" class="display dataTable" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+                    <thead>
+                        <tr role="row" style="height: 0px;">
+                            <th class="sorting_asc" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="Name: activate to sort column descending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Model Name</div></th>
+                            <th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Position: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Gapfill Model</div></th>
+                        </tr>
+                    </thead>
+                    <tbody id="models_tbody">
+                    </tbody>
+                    <tfoot>
+                        <tr style="height: 0px;">
+                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 137px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Model Name</div></th>
+                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 214px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Gapfill Model</div></th>
+                        </tr>
+                    </tfoot>
+
+                </table>
+            </div>
+            <div class="dataTables_scrollFoot" style="overflow: hidden; border: 0px; width: 100%;">
+                <div class="dataTables_scrollFootInner" style="padding-right: 0px;">
+                    <table class="display dataTable" cellspacing="0" width="100%" role="grid" style="margin-left: 0px;">
+                        <tfoot>
+                            <tr>
+                                <th rowspan="1" colspan="1" style="width: 50%;"></th>
+                                <th rowspan="1" colspan="1" style="width: 50%;"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+     <p>
+         Select a Metabolic Model to gap-fill (upload one below). Choosing a model will take you to a page where you can submit a gap-filling job for an uploaded metabolic model.
+     </p>
+  </fieldset>
+
   <div class="wrapper">
     <fieldset>
       <legend>
@@ -31,11 +136,11 @@
             <div class="proteome"></div>
             <label>Taxonomy ID:
               <input type="text" name="fasta_id" maxlength="7" pattern="^\d+$" title="Max Length: 7. This field accepts only numbers." />
-<br />Browse available proteomes at <a target="_blank" href="http://www.uniprot.org/proteomes/">UniProt</a>. Examples:
-<i>
-<br />&nbsp;&nbsp;224308 (Bacillus subtilis)
-<br />&nbsp;&nbsp;1051631 (Streptococcus phage YMC-2011)
-</i>
+            <br />Browse available proteomes at <a target="_blank" href="http://www.uniprot.org/proteomes/">UniProt</a>. Examples:
+            <i>
+            <br />&nbsp;&nbsp;224308 (Bacillus subtilis)
+            <br />&nbsp;&nbsp;1051631 (Streptococcus phage YMC-2011)
+            </i>
             </label>
             <br /><br/>
             <label class="fileUpload">OR upload a proteome fasta file: <input class="fileUpload" type="file" name="fasta" size="30" maxlength="200">
@@ -73,16 +178,14 @@
         </form>
     </fieldset>
   </div class="closesWrapper">
-  <div id="loading"><img src="assets/loader.gif">Wait up to 10 minutes, depending on size of proteome ...</div>
   <div id="messages" class="wrapper"></div class="closesWrapper">
   <div id="downloadLink"></div>
   <footer>
     <p>ProbAnno is described in <cite>Benedict MN, Mundy MB, Henry CS, Chia N, Price ND, Likelihood-based gene annotations for gap filling and quality assessment in genome-scale metabolic models.<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4199484/">PLoS Comput Biol. 2014 Oct; 10(10): e1003882. PMID 25329157</a>.</cite>
     <p><a href="aboutProbAnno.html">Additional information about ProbAnno</a>
   </footer>
-</body>
+<script src="{{url_for('static', filename='js/flask_probanno.js')}}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
-<script src="js/transform.js"></script>
-<script src="js/app.js"></script>
+<script src="{{url_for('static', filename='js/jquery.dataTables.min.js')}}"></script>
+</body>
 </html>

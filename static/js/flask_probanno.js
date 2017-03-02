@@ -5,8 +5,10 @@
 // ============== STRING CONSTANTS (e.g. root URL, API links, etc.) ====================================================
 
 const ROOT_URL = "http://localhost:5000";
-const LIST_MODELS_ENDPOINT = "/api/list/models";
+const LIST_MODELS_ENDPOINT = "/api/list/model";
+const LIST_PROBANNOS_ENDPOINT = "/api/list/probanno";
 const GAPFILL_MODEL_ENDPOINT = "/home";
+const DOWNLOAD_PROBANNO_ENDPOINT = "/home";
 // =====================================================================================================================
 function populateTable(table_tbody_id, data) {
     //Retrieve HTML Table element.
@@ -23,9 +25,18 @@ function populateTable(table_tbody_id, data) {
         for (var j = 0; j < columnCount; j++) {
             var cell = row.insertCell(-1);
             cell.innerHTML = data[i][j];
+            cell.setAttribute("align", "center");
+            cell.setAttribute("valign", "center");
         }
     }
     console.log(tbody.innerHTML);
+    $(document).ready(function() {
+    $('#example').DataTable( {
+        "scrollY":        "200px",
+        "scrollCollapse": true,
+        "paging":         false
+    } );
+} );
 }
 function listModels(table_tbody_id) {
     var args = {};
@@ -38,6 +49,23 @@ function listModels(table_tbody_id) {
         for (i = 0; i < args.data.length; i++) {
             var gapfill_url = ROOT_URL + GAPFILL_MODEL_ENDPOINT;
             tableArray.push([args.data[i], '<form action=' + gapfill_url + '><b><input type="submit" value="Gapfill This Model" /></b></form>']);
+        }
+        populateTable(args.table_tbody_id, tableArray);
+    }
+
+}
+
+function listProbannos(table_tbody_id) {
+    var args = {};
+    args.table_tbody_id = table_tbody_id;
+    var data = getJsonFromRequest('GET', ROOT_URL + LIST_PROBANNOS_ENDPOINT, onResponse, args);
+    //process the results into what we actually want to list
+
+    function onResponse(args) {
+        var tableArray = [];
+        for (i = 0; i < args.data.length; i++) {
+            var download_url = ROOT_URL + DOWNLOAD_PROBANNO_ENDPOINT;
+            tableArray.push([args.data[i], '<form action=' + download_url + '><b><input type="submit" value="Download"/></b></form>']);
         }
         populateTable(args.table_tbody_id, tableArray);
     }
