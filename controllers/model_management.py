@@ -11,7 +11,9 @@ def load_model(filename):
     # load model w/ cobra
     model = cobra_modeling.from_json_file(filename)
     session = session_management.get_session_id()
-    model_id = model.id if model.id is not None else str(request.date)
+    print(request.form)
+    model_id = request.form['upload_model_id'] if request.form['upload_model_id'] is not None else (model.id if model.id is not None else str(request.date))
+    print request.form['upload_model_id']
     if session is not None and db.find_model(session, model_id) is None:
         db.insert_model(session, model_id, cobra_modeling.model_to_json(model))
     else:

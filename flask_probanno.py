@@ -59,7 +59,7 @@ def upload_model():
         filename = utils.upload_file(app, file, ALLOWED_EXTENSIONS)
         model_management.load_model(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return 'Saved!'
+        return redirect('/')
     return '''
     <!doctype html>
     <title>Upload new Model (JSON format)</title>
@@ -107,6 +107,9 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+@app.route('/api/io/downloadprobanno')
+def download_probanno():
+    return probanno_management.download_probanno(app)
 
 if __name__ == '__main__':
     app.run()

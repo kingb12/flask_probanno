@@ -8,7 +8,7 @@ const ROOT_URL = "http://localhost:5000";
 const LIST_MODELS_ENDPOINT = "/api/list/model";
 const LIST_PROBANNOS_ENDPOINT = "/api/list/probanno";
 const GAPFILL_MODEL_ENDPOINT = "/home";
-const DOWNLOAD_PROBANNO_ENDPOINT = "/home";
+const DOWNLOAD_PROBANNO_ENDPOINT = "/api/io/downloadprobanno";
 // =====================================================================================================================
 function populateTable(table_tbody_id, data) {
     //Retrieve HTML Table element.
@@ -65,7 +65,11 @@ function listProbannos(table_tbody_id) {
         var tableArray = [];
         for (i = 0; i < args.data.length; i++) {
             var download_url = ROOT_URL + DOWNLOAD_PROBANNO_ENDPOINT;
-            tableArray.push([args.data[i], '<form action=' + download_url + '><b><input type="submit" value="Download"/></b></form>']);
+            console.log(args.data[i])
+            tableArray.push([args.data[i],
+                '<form method = "get" action=' + download_url + '>' +
+                    '<input name="fasta_id" type="hidden" value=' + args.data[i] + ' />' +
+                    '<b><input type="submit" value="Download"/></b></form>']);
         }
         populateTable(args.table_tbody_id, tableArray);
     }

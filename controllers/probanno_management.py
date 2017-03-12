@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, abort, send_from_directory
 import probanno
 import session_management
 import data.database as db
@@ -64,3 +64,16 @@ def get_fasta_by_id(app, fasta_id):
 
 def list_probannos():
     return json.dumps(db.list_probannos())
+
+
+def download_probanno(app):
+    fasta_id = request.args[FASTA_ID] if FASTA_ID in request.args else (request.form[FASTA_ID] if FASTA_ID in request.form else None)
+    if fasta_id is None:
+        abort(400)
+    probanno = db.find_by_id(db.PROBANNO,fasta_id)
+    if probanno is None:
+        abort(404)
+    filename = str(fasta_id) + '.json'
+    with open(app.config['UPLOAD_FOLDER'] + filename, 'w') as f:
+        f.write(json.dumps(probanno))
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)

@@ -15,7 +15,53 @@
   <header role="banner">
     <img class="ProbAnnoLogo" src="../static/ProbAnnoBanner.png" alt="Image of systems biology network. Text reads 'ProbAnno - Probabilistic annotation tool for metabolic modeling'.">
   </header>
-  <fieldset>
+  <div class="wrapper">
+    <fieldset>
+      <legend>
+        ProbAnno parameter input:
+      </legend>
+      <form id="runProbAnno" role="search" enctype="multipart/form-data" method="post" action="">
+        <div class="wrapper">
+          <div class="leftSide">
+            <h4>1) Input proteome for probabilistic annotation</h4>
+          </div>
+          <div class="rightSide">
+            <div class="proteome"></div>
+            <label>Taxonomy ID:
+              <input type="text" name="fasta_id" maxlength="7" pattern="^\d+$" title="Max Length: 7. This field accepts only numbers." />
+            <br />Browse available proteomes at <a target="_blank" href="http://www.uniprot.org/proteomes/">UniProt</a>. Examples:
+            <i>
+            <br />&nbsp;&nbsp;224308 (Bacillus subtilis)
+            <br />&nbsp;&nbsp;1051631 (Streptococcus phage YMC-2011)
+            </i>
+            </label>
+            <br /><br/>
+            <label class="fileUpload">OR upload a proteome fasta file: <input class="fileUpload" type="file" name="fasta" size="30" maxlength="200">
+            </label>
+          </div>
+        </div>
+        <div class="wrapper">
+          <div class="leftSide">
+            <h4>2) Template for probabilistic annotation</h4>
+          </div>
+          <div class="rightSide">
+            <div class="template"></div>
+            <label>Template appropriate to proteome is:
+              <select id="template" name="template">
+                <option value="None" selected="selected">None - skip probabilistic annotation</option>
+                <option value="GramNegative">GramNegative</option>
+                <option value="GramPositive">GramPositive</option>
+                <option value="Microbial">Microbial</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <input class="submit" formaction="http://localhost:5000/api/probanno/calculate" role="button" aria-pressed="false" type="submit" name="submit" id="submit">
+      </form>
+    </fieldset>
+  </div class="closesWrapper">
+<div style="display: inline-block">
+    <fieldset style="display: inline-block; width: 45%; vertical-align: center; horiz-align: center">
       <legend> Download a Probabilistic Annotation: </legend>
  <div id="probanno_wrapper" class="dataTables_wrapper">
         <div class="dataTables_scroll">
@@ -24,8 +70,8 @@
                     <table class="display dataTable" cellspacing="8" width="100%" role="grid" style="margin-left: 0px;">
                         <thead width="100%">
 						    <tr role="row">
-                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-sort="ascending" aria-label="Name: activate to sort column descending">Model Name</th>
-                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-label="Position: activate to sort column ascending">Gapfill Model</th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-sort="ascending" aria-label="Name: activate to sort column descending">FASTA ID</th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-label="Position: activate to sort column ascending">Reaction Likelihoods</th>
                             </tr>
 					    </thead>
                     </table>
@@ -35,16 +81,16 @@
                 <table id="probanno" class="display dataTable" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
                     <thead>
                         <tr role="row" style="height: 0px;">
-                            <th class="sorting_asc" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="Name: activate to sort column descending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Model Name</div></th>
-                            <th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Position: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Gapfill Model</div></th>
+                            <th class="sorting_asc" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="Name: activate to sort column descending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">FASTA ID</div></th>
+                            <th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Position: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Reaction Likelihoods</div></th>
                         </tr>
                     </thead>
                     <tbody id="probannos_tbody">
                     </tbody>
                     <tfoot>
                         <tr style="height: 0px;">
-                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 137px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Model Name</div></th>
-                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 214px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Gapfill Model</div></th>
+                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 137px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">FASTA ID</div></th>
+                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 214px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Reaction Likelihoods</div></th>
                         </tr>
                     </tfoot>
 
@@ -68,7 +114,7 @@
          Select a Probabilistic Annotation to Download (Run one above).
      </p>
   </fieldset>
-  <fieldset>
+    <fieldset  style="float: right; width: 45%; vertical-align: center; horiz-align: center;">
       <legend> Gapfill a Metabolic Model: </legend>
  <div id="model_wrapper" class="dataTables_wrapper">
         <div class="dataTables_scroll">
@@ -118,55 +164,10 @@
         </div>
     </div>
      <p>
-         Select a Metabolic Model to gap-fill (upload one below). Choosing a model will take you to a page where you can submit a gap-filling job for an uploaded metabolic model.
+         Select a Metabolic Model to gap-fill (upload one below).
      </p>
   </fieldset>
-
-  <div class="wrapper">
-    <fieldset>
-      <legend>
-        ProbAnno parameter input:
-      </legend>
-      <form id="runProbAnno" role="search" enctype="multipart/form-data" method="post" action="">
-        <div class="wrapper">
-          <div class="leftSide">
-            <h4>1) Input proteome for probabilistic annotation</h4>
-          </div>
-          <div class="rightSide">
-            <div class="proteome"></div>
-            <label>Taxonomy ID:
-              <input type="text" name="fasta_id" maxlength="7" pattern="^\d+$" title="Max Length: 7. This field accepts only numbers." />
-            <br />Browse available proteomes at <a target="_blank" href="http://www.uniprot.org/proteomes/">UniProt</a>. Examples:
-            <i>
-            <br />&nbsp;&nbsp;224308 (Bacillus subtilis)
-            <br />&nbsp;&nbsp;1051631 (Streptococcus phage YMC-2011)
-            </i>
-            </label>
-            <br /><br/>
-            <label class="fileUpload">OR upload a proteome fasta file: <input class="fileUpload" type="file" name="fasta" size="30" maxlength="200">
-            </label>
-          </div>
-        </div>
-        <div class="wrapper">
-          <div class="leftSide">
-            <h4>2) Template for probabilistic annotation</h4>
-          </div>
-          <div class="rightSide">
-            <div class="template"></div>
-            <label>Template appropriate to proteome is:
-              <select id="template" name="template">
-                <option value="None" selected="selected">None - skip probabilistic annotation</option>
-                <option value="GramNegative">GramNegative</option>
-                <option value="GramPositive">GramPositive</option>
-                <option value="Microbial">Microbial</option>
-              </select>
-            </label>
-          </div>
-        </div>
-        <input class="submit" formaction="http://localhost:5000/api/probanno/calculate" role="button" aria-pressed="false" type="submit" name="submit" id="submit">
-      </form>
-    </fieldset>
-  </div class="closesWrapper">
+</div>
   <div class="wrapper">
     <fieldset>
       <legend>
@@ -174,6 +175,8 @@
       </legend>
         <form action="http://localhost:5000/api/io/uploadmodel" method=post enctype=multipart/form-data>
             <input type=file name=file>
+            <input type="text" id="upload_model_id"/>
+            <label for="upload_model_id">Model ID (optional, inferred from file if blank)</label>
             <input type=submit value=Upload>
         </form>
     </fieldset>
