@@ -37,16 +37,9 @@ def home_page():
         resp.set_cookie(session_management.SESSION_ID, session_id)
     return resp
 
-@app.route('/home')
-def home_pag2e():
-    resp = make_response(render_template("listprobannos.html"))
-    if session_management.has_session():
-        session = session_management.get_session_id()
-    else:
-        session_id = session_management.prepare_new_session()
-        resp.set_cookie(session_management.SESSION_ID, session_id)
-    return resp
-
+@app.route('/gapfillmodel')
+def gapfill_view():
+    return make_response(render_template("gapfill.html"))
 
 @app.route('/api/io/uploadmodel', methods=[GET, POST])
 def upload_model():

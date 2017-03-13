@@ -31,12 +31,12 @@ function populateTable(table_tbody_id, data) {
     }
     console.log(tbody.innerHTML);
     $(document).ready(function() {
-    $('#example').DataTable( {
+        $('#example').DataTable( {
         "scrollY":        "200px",
         "scrollCollapse": true,
         "paging":         false
+        } );
     } );
-} );
 }
 function listModels(table_tbody_id) {
     var args = {};
@@ -96,8 +96,69 @@ function getJsonFromRequest(method, url, onResponse, args) {
 
 }
 
+function populateSelect(selectBody, data) {
+   //Retrieve HTML Table element.
+    console.log(data);
+    var sbody = document.getElementById(selectBody);
+    var s = '';
+    for (i = 0; i < data.length; i++) {
+           s += data[i]
+    }
+    sbody.innerHTML = s;
+}
+
+function selectModels(selectBody) {
+    var args = {};
+    args.selectBody = selectBody;
+    var data = getJsonFromRequest('GET', ROOT_URL + LIST_MODELS_ENDPOINT + "?sid=" + getCookie('session_id'), onResponse, args);
+    //process the results into what we actually want to list
+
+    function onResponse(args) {
+        var tableArray = [];
+        for (i = 0; i < args.data.length; i++) {
+            var selectString = '';
+            if (getParameterByName('model_id') == args.data[i]) {
+                selectString = 'selected="selected"';
+            }
+            tableArray.push('<option value="' + args.data[i] + '" ' + selectString + ' >' + args.data[i] + '</option>');
+        }
+        populateSelect(args.selectBody, tableArray);
+    }
+}
+
+function selectProbannos(selectBody) {
+    var args = {};
+    args.selectBody = selectBody;
+    var data = getJsonFromRequest('GET', ROOT_URL + LIST_PROBANNOS_ENDPOINT, onResponse, args);
+    //process the results into what we actually want to list
+
+    function onResponse(args) {
+        var tableArray = [];
+        for (i = 0; i < args.data.length; i++) {
+            var selectString = '';
+            if (getParameterByName('probanno_id') == args.data[i]) {
+                selectString = 'selected="selected"';
+            }
+            tableArray.push('<option value="'+ args.data[i] + '" ' + selectString + ' >' + args.data[i] + '</option>');
+        }
+        populateSelect(args.selectBody, tableArray);
+    }
+}
+
 function getCookie(name) {
   var value = "; " + document.cookie;
   var parts = value.split("; " + name + "=");
   if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+function getParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
