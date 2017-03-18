@@ -7,8 +7,9 @@
 const ROOT_URL = "http://localhost:5000";
 const LIST_MODELS_ENDPOINT = "/api/list/model";
 const LIST_PROBANNOS_ENDPOINT = "/api/list/probanno";
-const GAPFILL_MODEL_ENDPOINT = "/home";
+const GAPFILL_MODEL_ENDPOINT = "/gapfillmodel";
 const DOWNLOAD_PROBANNO_ENDPOINT = "/api/io/downloadprobanno";
+const DOWNLOAD_MODEL_ENDPOINT = "/api/io/downloadmodel";
 const CHECK_JOB_ENDPOINT = "/api/job/checkjob";
 
 // =====================================================================================================================
@@ -45,7 +46,7 @@ function listModels(table_tbody_id) {
     function onResponse(args) {
         var tableArray = [];
         for (i = 0; i < args.data.length; i++) {
-            var gapfill_url = ROOT_URL + GAPFILL_MODEL_ENDPOINT;
+            var gapfill_url = ROOT_URL + GAPFILL_MODEL_ENDPOINT + "?model_id=" + args.data[i];
             tableArray.push([args.data[i], '<form action=' + gapfill_url + '><b><input type="submit" value="Gapfill This Model" /></b></form>']);
         }
         populateTable(args.table_tbody_id, tableArray);

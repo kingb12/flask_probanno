@@ -88,30 +88,48 @@ def add_reactions():
 def hello():
     return 'hello'
 
+
 @app.route('/api/list/model')
 def list_models():
     return model_management.list_models()
+
 
 @app.route('/api/list/probanno')
 def list_probannos():
     return probanno_management.list_probannos()
 
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 
 @app.route('/api/io/downloadprobanno')
 def download_probanno():
     return probanno_management.download_probanno(app)
 
+@app.route('/api/io/downloadmodel')
+def download_model():
+    return model_management.download_model(app)
 
 @app.route('/api/job/checkjob')
 def check_job():
     return job.check_job()
 
+
 @app.route('/view/probanno/complete')
 def probanno_complete():
     return probanno_management.probanno_complete_view()
+
+@app.route('/view/model/complete')
+def model_complete():
+    return model_management.model_complete_view()
+
+@app.route('/aboutProbAnno.html')
+def about():
+    return render_template("aboutProbAnno.html")
+
+
 if __name__ == '__main__':
     app.run()
 

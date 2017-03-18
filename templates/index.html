@@ -174,8 +174,8 @@
         Upload a Metabolic Model:
       </legend>
         <form action="http://localhost:5000/api/io/uploadmodel" method=post enctype=multipart/form-data>
-            <input type=file name=file>
-            <input type="text" id="upload_model_id"/>
+            <input type=file name="file">
+            <input type="text" id="upload_model_id" name="upload_model_id"/>
             <label for="upload_model_id">Model ID (optional, inferred from file if blank)</label>
             <input type=submit value=Upload>
         </form>
