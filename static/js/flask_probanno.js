@@ -9,15 +9,14 @@ const LIST_MODELS_ENDPOINT = "/api/list/model";
 const LIST_PROBANNOS_ENDPOINT = "/api/list/probanno";
 const GAPFILL_MODEL_ENDPOINT = "/home";
 const DOWNLOAD_PROBANNO_ENDPOINT = "/api/io/downloadprobanno";
+const CHECK_JOB_ENDPOINT = "/api/job/checkjob";
+
 // =====================================================================================================================
 function populateTable(table_tbody_id, data) {
     //Retrieve HTML Table element.
-    console.log(data);
     var tbody = document.getElementById(table_tbody_id);
-    console.log("hello");
     //Get the count of columns.
     var columnCount = data[0].length;
-    console.log(columnCount);
 
     //Add the data rows.
     for (var i = 0; i < data.length; i++) {
@@ -29,7 +28,6 @@ function populateTable(table_tbody_id, data) {
             cell.setAttribute("valign", "center");
         }
     }
-    console.log(tbody.innerHTML);
     $(document).ready(function() {
         $('#example').DataTable( {
         "scrollY":        "200px",
@@ -65,7 +63,6 @@ function listProbannos(table_tbody_id) {
         var tableArray = [];
         for (i = 0; i < args.data.length; i++) {
             var download_url = ROOT_URL + DOWNLOAD_PROBANNO_ENDPOINT;
-            console.log(args.data[i])
             tableArray.push([args.data[i],
                 '<form method = "get" action=' + download_url + '>' +
                     '<input name="fasta_id" type="hidden" value=' + args.data[i] + ' />' +
@@ -98,7 +95,6 @@ function getJsonFromRequest(method, url, onResponse, args) {
 
 function populateSelect(selectBody, data) {
    //Retrieve HTML Table element.
-    console.log(data);
     var sbody = document.getElementById(selectBody);
     var s = '';
     for (i = 0; i < data.length; i++) {
@@ -161,4 +157,16 @@ function getParameterByName(name, url) {
     if (!results) return null;
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function checkJob(jobStatus, job_id) {
+    var args = {};
+    args.jobStatus = jobStatus;
+    var data = getJsonFromRequest('GET', ROOT_URL + CHECK_JOB_ENDPOINT + '?job_id=' + job_id, onResponse, args);
+
+    function onResponse(args) {
+        var status = document.getElementById(args.jobStatus);
+        status.innerHTML = "<b>" + args.data + "</b>";
+        document.job_status = args.data;
+    }
 }

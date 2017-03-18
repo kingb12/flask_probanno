@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>ProbAnno - probabilistic annotation of proteomes</title>
+  <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico">
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" media="screen">
+
+</head>
+
+<body onload="setProbannoDownload('downloadProbanno')">
+  <header role="banner">
+    <img class="ProbAnnoLogo" src="/static/ProbAnnoBanner.png" alt="Image of systems biology network. Text reads 'ProbAnno - Probabilistic annotation tool for metabolic modeling'.">
+  </header>
+  <div class="wrapper">
+    <fieldset>
+      <legend>
+        Download Reaction Likelihoods:
+      </legend>
+        <p>
+            Success! We have finished calculating or retrieving reaction likelihoods for this organism. Download them here:
+        </p>
+        <div id="downloadProbanno"></div>
+    </fieldset>
+  </div>
+  <footer>
+    <p>ProbAnno is described in <cite>Benedict MN, Mundy MB, Henry CS, Chia N, Price ND, Likelihood-based gene annotations for gap filling and quality assessment in genome-scale metabolic models.<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4199484/">PLoS Comput Biol. 2014 Oct; 10(10): e1003882. PMID 25329157</a>.</cite>
+    <p><a href="aboutProbAnno.html">Additional information about ProbAnno</a>
+  </footer>
+  <script>
+      function  setProbannoDownload(downloadFormId) {
+          var mydiv = document.getElementById(downloadFormId);
+          mydiv.innerHTML = '<form action=' + ROOT_URL + DOWNLOAD_PROBANNO_ENDPOINT + ' method="get">' +
+                  '<input name="fasta_id" type="hidden" value=' + {{ probanno_id }} + ' />' +
+                  '<b><input type="submit" value="Download"/></b></form>'
+      }
+  </script>
+  <script src="{{url_for('static', filename='js/flask_probanno.js')}}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="{{url_for('static', filename='js/jquery.dataTables.min.js')}}"></script>
+</body>
+</html>

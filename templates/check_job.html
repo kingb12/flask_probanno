@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>ProbAnno - probabilistic annotation of proteomes</title>
+  <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico">
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" media="screen">
+
+</head>
+<body onload="updateJob()">
+  <header role="banner">
+    <img class="ProbAnnoLogo" src="/static/ProbAnnoBanner.png" alt="Image of systems biology network. Text reads 'ProbAnno - Probabilistic annotation tool for metabolic modeling'.">
+  </header>
+  <div class="wrapper">
+    <fieldset>
+      <legend>
+        Job Status:
+      </legend>
+        <p>
+            You've submitted a job that may take some time to run. You can check its status here, and if it completes successfully you will be re-directed to a page with the result!
+            You do not need to stay on this page for the job to complete.
+        </p>
+        <div id="jobStatus"></div>
+    </fieldset>
+  </div>
+  <footer>
+    <p>ProbAnno is described in <cite>Benedict MN, Mundy MB, Henry CS, Chia N, Price ND, Likelihood-based gene annotations for gap filling and quality assessment in genome-scale metabolic models.<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4199484/">PLoS Comput Biol. 2014 Oct; 10(10): e1003882. PMID 25329157</a>.</cite>
+    <p><a href="aboutProbAnno.html">Additional information about ProbAnno</a>
+  </footer>
+  <script>
+      function updateJob() {
+          checkJob('jobStatus', "{{ job_id }}");
+          if (document.job_status === "Complete") {
+              window.location = "{{ success_url }}";
+              location.reload();
+          }
+      }
+      setInterval(updateJob, 30000);
+  </script>
+  <script src="{{url_for('static', filename='js/flask_probanno.js')}}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="{{url_for('static', filename='js/jquery.dataTables.min.js')}}"></script>
+</body>
+</html>

@@ -5,7 +5,7 @@ from flask import flash
 import utils
 
 import data.database as db
-from controllers import session_management, model_management, probanno_management
+from controllers import session_management, model_management, probanno_management, job
 
 import ConfigParser
 
@@ -104,6 +104,14 @@ def allowed_file(filename):
 def download_probanno():
     return probanno_management.download_probanno(app)
 
+
+@app.route('/api/job/checkjob')
+def check_job():
+    return job.check_job()
+
+@app.route('/view/probanno/complete')
+def probanno_complete():
+    return probanno_management.probanno_complete_view()
 if __name__ == '__main__':
     app.run()
 
