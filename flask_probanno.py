@@ -15,7 +15,7 @@ GET = 'GET'
 
 DATABASE = '/data/db/probannoweb.db'
 UPLOAD_FOLDER = '/tmp/'
-MODEL_TEMPLATES_FOLDER = '/../probanno_standalone/templates/'
+MODEL_TEMPLATES_FOLDER = '/probannoenv/src/probanno/templates/'
 ALLOWED_EXTENSIONS = {'json', 'fasta', 'fa'}
 
 # Set up on first run

@@ -4,7 +4,7 @@
 
 // ============== STRING CONSTANTS (e.g. root URL, API links, etc.) ====================================================
 
-const ROOT_URL = "http://localhost:5000";
+const ROOT_URL = "http://probanno.systemsbiology.net";
 const LIST_MODELS_ENDPOINT = "/api/list/model";
 const LIST_PROBANNOS_ENDPOINT = "/api/list/probanno";
 const LIST_JOBS_ENDPOINT = "/api/list/job";
