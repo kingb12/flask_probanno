@@ -57,7 +57,7 @@ def get_reaction_probabilities(app, fasta_id=None, fasta_file=None):
     job = Job(session, CALCULATE_PROBANNO_JOB, fasta_id)
     probanno_queue.enqueue(_async_get_reaction_probabilities,
                            job, fasta_id, session, fasta_file, template_model_file, gen_id,
-                           job_id=job.id)
+                           job_id=job.id, timeout=600)
     return job_status_page(job.id, PROBANNO_COMPLETE_URL + '?fasta_id=' + fasta_id)
 
 

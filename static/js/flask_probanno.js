@@ -46,8 +46,8 @@ function listModels(table_tbody_id) {
     function onResponse(args) {
         var tableArray = [];
         for (i = 0; i < args.data.length; i++) {
-            var gapfill_url = ROOT_URL + GAPFILL_MODEL_ENDPOINT + "?model_id=" + args.data[i];
-            tableArray.push([args.data[i], '<form action=' + gapfill_url + '><b><input type="submit" value="Gapfill This Model" /></b></form>']);
+            var gapfill_url = ROOT_URL + GAPFILL_MODEL_ENDPOINT;
+            tableArray.push([args.data[i], '<form action=' + gapfill_url + ' method="get"><b><input type="hidden" name="model_id" value=\"' + args.data[i] + '\"/> <input type="submit" value="Gapfill This Model" /></b></form>']);
         }
         populateTable(args.table_tbody_id, tableArray);
     }
@@ -115,7 +115,7 @@ function selectModels(selectBody) {
         for (i = 0; i < args.data.length; i++) {
             var selectString = '';
             if (getParameterByName('model_id') == args.data[i]) {
-                selectString = 'selected="selected"';
+                selectString = 'selected';
             }
             tableArray.push('<option value="' + args.data[i] + '" ' + selectString + ' >' + args.data[i] + '</option>');
         }
