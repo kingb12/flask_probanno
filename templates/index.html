@@ -11,7 +11,7 @@
 
 </head>
 
-<body onload="listModels('models_tbody'); listProbannos('probannos_tbody'); showJobs('jobs_tbody', 'jobs_table')">
+<body onload="listModels('models_tbody'); listProbannos('probannos_tbody'); listJobs('jobs_tbody', 'jobs_table')">
   <header role="banner">
     <img class="ProbAnnoLogo" src="../static/ProbAnnoBanner.png" alt="Image of systems biology network. Text reads 'ProbAnno - Probabilistic annotation tool for metabolic modeling'.">
   </header>
@@ -34,8 +34,8 @@
                     </table>
                 </div>
             </div>
-            <div id="probanno_div" class="dataTables_scrollBody" style="position: relative; overflow: auto; max-height: 200px; width: 100%;">
-                <table id="probanno" class="display dataTable" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+            <div id="jobs_div" class="dataTables_scrollBody" style="position: relative; overflow: auto; max-height: 200px; width: 100%;">
+                <table id="jobs" class="display dataTable" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
                     <thead>
                         <tr role="row" style="height: 0px;">
                             <th class="sorting_asc" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="Name: activate to sort column descending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">FASTA ID</div></th>
@@ -246,16 +246,6 @@
     <p><a href="aboutProbAnno.html">Additional information about ProbAnno</a>
   </footer>
   <script src="{{url_for('static', filename='js/flask_probanno.js')}}"></script>
-  <script>
-      function showJobs(t_body_id, jobs_table_id) {
-          listJobs(t_body_id);
-          var jobs_tbody = document.getElementById(t_body_id);
-          if (jobs_tbody.innerHTML === '') {
-              var jobs_table = document.getElementById(jobs_table_id);
-              jobs_table.innerHTML = '';
-          }
-      }
-  </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <script src="{{url_for('static', filename='js/jquery.dataTables.min.js')}}"></script>
 </body>
