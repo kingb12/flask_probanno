@@ -23,7 +23,7 @@ INSERT_INTO_JOBS_QUERY = 'INSERT INTO ' + JOB + JOB_SCHEMA + ' VALUES (?, ?, ?, 
 LIST_MODELS_QUERY = 'SELECT mid FROM ' + MODEL + ' WHERE sid = ?'
 UPDATE_IN_JOBS_QUERY = 'UPDATE ' + JOB + ' SET ' + UPDATE_JOB_SCHEMA + ' WHERE jid = ?'
 LIST_PROBANNOS_QUERY = 'SELECT fasta_id FROM ' + PROBANNO
-
+LIST_JOBS_QUERY = 'SELECT * FROM Jobs WHERE sid = ?'
 def set_db(app, filename):
     global __database
     """
@@ -76,6 +76,11 @@ def list_probannos():
     curs = __database.engine
     result = curs.execute(LIST_PROBANNOS_QUERY, []).fetchall()
     return None if result is None else [r[0] for r in result]
+
+def list_jobs(session_id):
+    curs = __database.engine
+    result = curs.execute(LIST_JOBS_QUERY, [session_id]).fetchall()
+    return None if result is None else [list(r) for r in result]
 
 
 def update_job(jid, session, job, target, status):

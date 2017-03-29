@@ -7,16 +7,22 @@
 const ROOT_URL = "http://localhost:5000";
 const LIST_MODELS_ENDPOINT = "/api/list/model";
 const LIST_PROBANNOS_ENDPOINT = "/api/list/probanno";
+const LIST_JOBS_ENDPOINT = "/api/list/job";
 const GAPFILL_MODEL_ENDPOINT = "/gapfillmodel";
 const DOWNLOAD_PROBANNO_ENDPOINT = "/api/io/downloadprobanno";
 const DOWNLOAD_MODEL_ENDPOINT = "/api/io/downloadmodel";
 const CHECK_JOB_ENDPOINT = "/api/job/checkjob";
+const VIEW_JOB_ENDPOINT = "/view/job/status";
+const RUN_PROBANNO_ENDPOINT = "/api/probanno/calculate";
 
 // =====================================================================================================================
 function populateTable(table_tbody_id, data) {
     //Retrieve HTML Table element.
     var tbody = document.getElementById(table_tbody_id);
     //Get the count of columns.
+    if (data.length === 0) {
+        return;
+    }
     var columnCount = data[0].length;
 
     //Add the data rows.
@@ -74,6 +80,61 @@ function listProbannos(table_tbody_id) {
 
 }
 
+function listJobs(table_tbody_id) {
+    var args = {};
+    args.table_tbody_id = table_tbody_id;
+    var data = getJsonFromRequest('GET', ROOT_URL + LIST_JOBS_ENDPOINT, onResponse, args);
+    //process the results into what we actually want to list
+
+    function onResponse(args) {
+        var tableArray = [];
+        for (i = 0; i < args.data.length; i++) {
+            var status = args.data[i][4];
+            var html;
+            var watch_url = ROOT_URL + VIEW_JOB_ENDPOINT;
+            var download_url;
+            var result_type;
+            var suffix = '';
+            if (status !== 'Complete' && status !== 'Failure') {
+                html =  '<form method = "get" action=' + watch_url + '>' +
+                            '<input name="job_id" type="hidden" value=' + args.data[i][0] + ' />' +
+                            '<b><input type="submit" value="Watch Status"/></b>' +
+                        '</form>'
+            } else if (status === 'Failure') {
+                var retry_url;
+                if (args.data[i][2] == 'calculate_probanno') {
+                    retry_url = ROOT_URL + RUN_PROBANNO_ENDPOINT;
+                    result_type = 'fasta_id';
+                } else {
+                   retry_url = ROOT_URL + GAPFILL_MODEL_ENDPOINT;
+                   result_type = 'model_id';
+                }
+                html =  '<form method = "get" action=' + retry_url + '>' +
+                            '<input name=' + result_type + ' type="hidden" value=' + args.data[i][3] + ' />' +
+                            '<b><input type="submit" value="Retry"/></b>' +
+                        '</form>'
+            } else {
+                if (args.data[i][2] === 'calculate_probanno') {
+                    download_url = ROOT_URL + DOWNLOAD_PROBANNO_ENDPOINT;
+                    result_type = "fasta_id";
+                } else {
+                    download_url = ROOT_URL + DOWNLOAD_MODEL_ENDPOINT;
+                    result_type = "model_id";
+                    suffix = '_gapfilled';
+                }
+                html =  '<form method = "get" action=' + download_url + '>' +
+                    '<input name=' + result_type + ' type="hidden" value=' + args.data[i][3] + suffix + ' />' +
+                    '<b><input type="submit" value="Download Result"/></b>' +
+                    '</form>';
+            }
+
+            tableArray.push([args.data[i][3], args.data[i][2], args.data[i][4], html]);
+        }
+        populateTable(args.table_tbody_id, tableArray);
+    }
+
+}
+
 function getJsonFromRequest(method, url, onResponse, args) {
     // Inspired/copied from: https://www.kirupa.com/html5/making_http_requests_js.htm
     var xhr = new XMLHttpRequest();
@@ -87,7 +148,6 @@ function getJsonFromRequest(method, url, onResponse, args) {
     function processRequest() {
         if (xhr.readyState == 4 && xhr.status === 200) {
             args.data = JSON.parse(xhr.responseText);
-            console.log(xhr.responseText);
             onResponse(args);
         }
     }

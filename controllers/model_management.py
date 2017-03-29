@@ -4,7 +4,7 @@ from flask import request, send_from_directory, render_template, abort
 import data.database as db
 import session_management
 import json
-from job import Job, job_status_page
+from job import Job, job_status_page, GAPFILL_COMPLETE_URL
 from rq import Queue
 from redis import Redis
 from session_management import SESSION_ID
@@ -12,7 +12,6 @@ import exceptions
 
 MICROBIAL = 'Microbial'
 GAPFILL_MODEL_JOB = 'gapfill_model'
-GAPFILL_COMPLETE_URL = '/view/model/complete'
 MODEL_ID = 'model_id'
 model_queue = Queue(connection=Redis(), default_timeout=60)
 
@@ -52,10 +51,10 @@ def gapfill_model(app):
     model = _retrieve_model(session_id, model_id)
     template = request.args['template'] if 'template' in request.args else MICROBIAL
     universal_model_file = app.config['MODEL_TEMPLATES'] + template + '.json'
-    job = Job(session_id, GAPFILL_MODEL_JOB, fasta_id)
+    job = Job(session_id, GAPFILL_MODEL_JOB, model_id)
     model_queue.enqueue(_async_gapfill_model, job, model_id, session_id, model, universal_model_file, likelihoods,
                         addReactions, timeout=45, job_id=job.id)
-    return job_status_page(job.id, GAPFILL_COMPLETE_URL + '?fasta_id=' + fasta_id)
+    return job_status_page(job.id, GAPFILL_COMPLETE_URL + '?model_id=' + model_id)
 
 
 def _async_gapfill_model(job, model_id, session_id, model, universal_model_file, likelihoods, addReactions):

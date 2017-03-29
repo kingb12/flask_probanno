@@ -7,7 +7,7 @@ import data.database as db
 import utils
 import json
 import exceptions
-from job import Job, job_status_page
+from job import Job, job_status_page, PROBANNO_COMPLETE_URL
 
 # TODO: (PW-10) Make this relative reference cleaner with a config file
 # These correspond to the drop down menu items in the view
@@ -21,7 +21,6 @@ FASTA = 'fasta'
 TEMPLATE = 'template'
 GET = 'GET'
 POST = 'POST'
-PROBANNO_COMPLETE_URL = '/view/probanno/complete'
 CALCULATE_PROBANNO_JOB = 'calculate_probanno'
 
 
@@ -36,13 +35,13 @@ def get_reaction_probabilities(app, fasta_id=None, fasta_file=None):
         if fasta_id is None and FASTA in request.files:
             utils.upload_file(app, request.files[FASTA])
         fasta_file = get_fasta_by_id(app, fasta_id) if fasta_file is None else fasta_file
-        template = request.args[TEMPLATE]
+        template = request.args[TEMPLATE] if TEMPLATE in request.form else DEFAULT_TEMPLATE
     if request.method == POST:
         fasta_id = request.form[FASTA_ID] if fasta_id is None else fasta_id
         if fasta_id is None and FASTA in request.files:
             fasta_file = utils.upload_file(app, request.files[FASTA])
         fasta_file = get_fasta_by_id(app, fasta_id) if fasta_file is None else fasta_file
-        template = request.form[TEMPLATE]
+        template = request.form[TEMPLATE] if TEMPLATE in request.form else DEFAULT_TEMPLATE
     template_file = TEMPLATE_FILES[template] if template in TEMPLATE_FILES else TEMPLATE_FILES[DEFAULT_TEMPLATE]
     likelihoods = None
     if fasta_id is not None and fasta_id != '':
@@ -96,7 +95,7 @@ def download_probanno(app):
     fasta_id = request.args[FASTA_ID] if FASTA_ID in request.args else (request.form[FASTA_ID] if FASTA_ID in request.form else None)
     if fasta_id is None:
         abort(400)
-    probanno = db.find_by_id(db.PROBANNO,fasta_id)
+    probanno = db.find_by_id(db.PROBANNO, fasta_id)[-1]
     if probanno is None:
         abort(404)
     filename = str(fasta_id) + '.json'

@@ -116,6 +116,10 @@ def download_model():
 def check_job():
     return job.check_job()
 
+@app.route('/api/list/job')
+def list_jobs():
+    return job.list_jobs()
+
 
 @app.route('/view/probanno/complete')
 def probanno_complete():
@@ -129,6 +133,9 @@ def model_complete():
 def about():
     return render_template("aboutProbAnno.html")
 
+@app.route('/view/job/status')
+def job_status():
+    return job.view_status()
 
 if __name__ == '__main__':
     app.run()

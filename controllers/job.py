@@ -14,6 +14,9 @@ FAILURE = 'Failure'
 RUNNING = 'Running'
 NOT_STARTED = 'Not Started'
 JOB_ID = "job_id"
+GAPFILL_COMPLETE_URL = '/view/model/complete'
+PROBANNO_COMPLETE_URL = '/view/probanno/complete'
+
 
 class Job:
 
@@ -57,3 +60,23 @@ def check_job():
 
 def job_status_page(job_id, success_url):
     return render_template("check_job.html", job_id=job_id, success_url=success_url)
+
+
+def list_jobs():
+    session_id = session_management.get_session_id()
+    return json.dumps(db.list_jobs(session_id))
+
+
+def view_status():
+    job_id = request.args['job_id'] if 'job_id' in request.args else (request.form['job_id'] if 'job_id' in request.form else None)
+    if job_id is None:
+        return InvalidUsage("Must specify a job ID")
+    job_entry = db.find_by_id(db.JOB, job_id)
+    job_type = job_entry[2]
+    target = job_entry[3]
+    success_url = ''
+    if job_type == 'calculate_probanno':
+        success_url = PROBANNO_COMPLETE_URL + '?fasta_id=' + target
+    else:
+        success_url = GAPFILL_COMPLETE_URL + '?model_id=' + target
+    return job_status_page(job_id, success_url)
