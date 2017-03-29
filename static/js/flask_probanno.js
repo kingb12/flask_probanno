@@ -80,14 +80,20 @@ function listProbannos(table_tbody_id) {
 
 }
 
-function listJobs(table_tbody_id) {
+function listJobs(table_tbody_id, jobs_table_div) {
     var args = {};
     args.table_tbody_id = table_tbody_id;
+    args.jobs_table_div = jobs_table_div;
     var data = getJsonFromRequest('GET', ROOT_URL + LIST_JOBS_ENDPOINT, onResponse, args);
     //process the results into what we actually want to list
 
     function onResponse(args) {
         var tableArray = [];
+        if (args.data.length == 0) {
+            var jobs_div = document.getElementById(args.jobs_table_div);
+            jobs_div.innerHTML = "";
+            return;
+        }
         for (i = 0; i < args.data.length; i++) {
             var status = args.data[i][4];
             var html;
