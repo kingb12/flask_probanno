@@ -111,7 +111,7 @@
             </label>
           </div>
         </div>
-        <input class="submit" formaction="http://localhost:5000/api/probanno/calculate" role="button" aria-pressed="false" type="submit" name="submit" id="submit">
+        <input class="submit" formaction="http://probanno.systemsbiology.net/api/probanno/calculate" role="button" aria-pressed="false" type="submit" name="submit" id="submit">
       </form>
     </fieldset>
   </div class="closesWrapper">
@@ -228,7 +228,7 @@
       <legend>
         Upload a Metabolic Model:
       </legend>
-        <form action="http://localhost:5000/api/io/uploadmodel" method=post enctype=multipart/form-data>
+        <form action="http://probanno.systemsbiology.net/api/io/uploadmodel" method=post enctype=multipart/form-data>
             <input type=file name="file">
             <input type="text" id="upload_model_id" name="upload_model_id"/>
             <label for="upload_model_id">Model ID (optional, inferred from file if blank)</label>

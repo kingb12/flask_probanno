@@ -9,6 +9,7 @@ from rq import Queue
 from redis import Redis
 from session_management import SESSION_ID
 import exceptions, copy
+import traceback
 
 MICROBIAL = 'Microbial'
 GAPFILL_MODEL_JOB = 'gapfill_model'
@@ -60,7 +61,6 @@ def gapfill_model(app):
 def _async_gapfill_model(job, model_id, session_id, model, universal_model_file, likelihoods, addReactions, request_args, solver='glpk'):
     job.start()
     try:
-        print('here')
         universal_model = cobra_modeling.get_universal_model(universal_model_file)
         model.solver = solver
         universal_model.solver = solver
@@ -77,7 +77,7 @@ def _async_gapfill_model(job, model_id, session_id, model, universal_model_file,
         job.complete()
         return cobra_modeling.model_to_json(model)
     except BaseException as e:
-        print("ERROR: ", e)
+        print(traceback.format_exc())
         job.fail()
 
 
