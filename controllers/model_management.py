@@ -8,7 +8,7 @@ from job import Job, job_status_page, GAPFILL_COMPLETE_URL
 from rq import Queue
 from redis import Redis
 from session_management import SESSION_ID
-import exceptions
+import exceptions, copy
 
 MICROBIAL = 'Microbial'
 GAPFILL_MODEL_JOB = 'gapfill_model'
@@ -46,21 +46,24 @@ def gapfill_model(app):
     model_id = request.args['model_id']
     session_id = session_management.get_session_id()
     fasta_id = request.args['fasta_id']
-    likelihoods = probanno_management.get_reaction_probabilities(app, fasta_id)
+    likelihoods = probanno_management.retrieve_probanno(fasta_id)
     addReactions = request.args['add_reactions'] if 'add_reactions' in request.args else True
     model = _retrieve_model(session_id, model_id)
     template = request.args['template'] if 'template' in request.args else MICROBIAL
-    universal_model_file = app.config['MODEL_TEMPLATES'] + template + '.json'
+    universal_model_file = app.config['UNIVERSAL_MODELS'] + template + '.json'
     job = Job(session_id, GAPFILL_MODEL_JOB, model_id)
     model_queue.enqueue(_async_gapfill_model, job, model_id, session_id, model, universal_model_file, likelihoods,
-                        addReactions, timeout=45, job_id=job.id)
+                        addReactions,copy.copy(request.args), timeout=600, job_id=job.id, solver=app.config['SOLVER'])
     return job_status_page(job.id, GAPFILL_COMPLETE_URL + '?model_id=' + model_id)
 
 
-def _async_gapfill_model(job, model_id, session_id, model, universal_model_file, likelihoods, addReactions):
+def _async_gapfill_model(job, model_id, session_id, model, universal_model_file, likelihoods, addReactions, request_args, solver='glpk'):
     job.start()
     try:
-        universal_model = cobra_modeling.build_universal_model(universal_model_file)
+        print('here')
+        universal_model = cobra_modeling.get_universal_model(universal_model_file)
+        model.solver = solver
+        universal_model.solver = solver
         reactions = cobra_modeling.gapfill_model(model, universal_model, likelihoods)[0]
         print reactions
         if addReactions:
@@ -68,13 +71,13 @@ def _async_gapfill_model(job, model_id, session_id, model, universal_model_file,
                                  universal_model.reactions.has_id(r.id) and not model.reactions.has_id(
                                      r.id)])
         print model.optimize().f
-        new_model_id = model_id + '_gapfilled' if 'new_name' not in request.args else request.args['new_name']
+        new_model_id = model_id + '_gapfilled' if 'new_name' not in request_args else request_args['new_name']
         if db.find_model(session_id, new_model_id) is None:
             save_model(model_id + '_gapfilled', session_id, model)
         job.complete()
         return cobra_modeling.model_to_json(model)
     except BaseException as e:
-        print(e)
+        print("ERROR: ", e)
         job.fail()
 
 

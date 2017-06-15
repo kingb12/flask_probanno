@@ -16,7 +16,9 @@ GET = 'GET'
 DATABASE = '/data/db/probannoweb.db'
 UPLOAD_FOLDER = '/tmp/'
 MODEL_TEMPLATES_FOLDER = '/../probanno_standalone/templates/'
+UNIVERSAL_MODELS_FOLDER = '/data/universal/'
 ALLOWED_EXTENSIONS = {'json', 'fasta', 'fa'}
+SOLVER = 'gurobi'
 
 # Set up on first run
 app = Flask(__name__)
@@ -24,6 +26,8 @@ config = ConfigParser.ConfigParser()
 config.read(os.path.realpath(__file__) + '/deploy.cfg')
 app.config['MODEL_TEMPLATES'] = os.path.dirname(os.path.realpath(__file__)) + MODEL_TEMPLATES_FOLDER if not config.has_option('flask_probanno', 'model_templates_folder') else config.get('flask_probanno', 'model_templates_folder')
 app.config['UPLOAD_FOLDER'] = os.path.dirname(os.path.realpath(__file__)) + UPLOAD_FOLDER
+app.config['UNIVERSAL_MODELS'] = os.path.dirname(os.path.realpath(__file__)) + UNIVERSAL_MODELS_FOLDER
+app.config['SOLVER'] = SOLVER
 db.set_db(app, os.path.dirname(os.path.realpath(__file__)) + DATABASE)
 
 

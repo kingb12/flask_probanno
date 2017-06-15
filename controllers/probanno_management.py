@@ -110,3 +110,9 @@ def probanno_complete_view(fasta_id=None):
     if fasta_id is None:
         raise exceptions.InvalidUsage()
     return render_template("probanno_complete.html", probanno_id=fasta_id)
+
+def retrieve_probanno(fasta_id):
+    if fasta_id is not None and fasta_id != '':
+        likelihoods = db.find_by_id(db.PROBANNO, fasta_id)
+    if likelihoods is not None:
+        return likelihoods[-1]

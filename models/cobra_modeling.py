@@ -34,3 +34,7 @@ def gapfill_model(model, universal_model, likelihoods):
 
 def build_universal_model(temlate_file):
     return probanno.build_universal_model(temlate_file, clean_exchange_reactions=True)
+
+
+def get_universal_model(universal_model_file):
+    return cobra.io.json.load_json_model(universal_model_file)
