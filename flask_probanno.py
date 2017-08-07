@@ -1,6 +1,7 @@
 import os
 
-from flask import Flask, request, redirect, make_response, render_template
+from flask import Flask, request, redirect, make_response, render_template, jsonify
+from flask_swagger import swagger
 from flask import flash
 import utils
 
@@ -30,9 +31,16 @@ app.config['UNIVERSAL_MODELS'] = os.path.dirname(os.path.realpath(__file__)) + U
 app.config['SOLVER'] = SOLVER
 db.set_db(app, os.path.dirname(os.path.realpath(__file__)) + DATABASE)
 
+#  ROUTES: Below are definitions for what occurs when a URL is reached using one of the HTTP methods. In short, the
+#  route tag calls the function whenever a request targets a particular URL. These are separated into two sections, one
+#  for views and functions related to the web-site, and ones beginning with /api/, which are for the underlying web
+#  web service.
+
+#  VIEW ROUTES
 
 @app.route('/')
 def home_page():
+    # Displays the users home page
     resp = make_response(render_template("index.html"))
     if session_management.has_session():
         session = session_management.get_session_id()
@@ -43,16 +51,72 @@ def home_page():
 
 @app.route('/gapfillmodel')
 def gapfill_view():
+    # Displays a page for submission of gap-filling jobs
     return make_response(render_template("gapfill.html"))
+
+@app.route('/view/probanno/complete')
+def probanno_complete():
+    # Displays a page indicating a probanno job has completed, and provides a download link
+    return probanno_management.probanno_complete_view()
+
+@app.route('/view/model/complete')
+def model_complete():
+    # Displays a page indicating a gapfill job has completed, and provides a download link
+    return model_management.model_complete_view()
+
+@app.route('/aboutProbAnno.html')
+def about():
+    # Displays an about page
+    return render_template("aboutProbAnno.html")
+
+@app.route('/view/job/status')
+def job_status():
+    # Displays a page with information on a job. Has some status-checking logic, but eventually a template is rendered
+    return job.view_status()
+
+
+# API ROUTES
 
 @app.route('/api/io/uploadmodel', methods=[GET, POST])
 def upload_model():
+    """
+    Upload a model for later gap-filling
+    ---
+    tags:
+      - model
+    definitions:
+      - schema:
+          id: Model
+          properties:
+            name: Model
+            type: string
+            description: a cobrapy model exported in JSON format
+    parameters:
+      - in: body
+        name: body
+        schema:
+          id: Model
+          required:
+            - file
+          properties:
+            file:
+              type: string
+              description: The cobrapy model in JSON format
+            groups:
+              type: array
+              description: list of groups
+              items:
+                $ref: "#/definitions/Group"
+    responses:
+      201:
+        description: Model Uploaded
+    """
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
-        file = request.files['file']
+        file = request.files['model']
         filename = utils.upload_file(app, file, ALLOWED_EXTENSIONS)
         model_management.load_model(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -87,12 +151,6 @@ def run_fba():
 def add_reactions():
     return "Not Implemented"
 
-
-@app.route('/hello')
-def hello():
-    return 'hello'
-
-
 @app.route('/api/list/model')
 def list_models():
     return model_management.list_models()
@@ -124,22 +182,15 @@ def check_job():
 def list_jobs():
     return job.list_jobs()
 
+@app.route('/spec')
+def spec():
+    # Renders the template indicating the API specification. Make sure the file is up to date!
+    # Basic workflow I follow
+    swag = swagger(app)
+    swag['info']['version'] = "1.0"
+    swag['info']['title'] = "Probanno API"
+    return jsonify(swag)
 
-@app.route('/view/probanno/complete')
-def probanno_complete():
-    return probanno_management.probanno_complete_view()
-
-@app.route('/view/model/complete')
-def model_complete():
-    return model_management.model_complete_view()
-
-@app.route('/aboutProbAnno.html')
-def about():
-    return render_template("aboutProbAnno.html")
-
-@app.route('/view/job/status')
-def job_status():
-    return job.view_status()
 
 if __name__ == '__main__':
     app.run()

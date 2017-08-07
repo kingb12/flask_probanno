@@ -111,7 +111,7 @@
             </label>
           </div>
         </div>
-        <input class="submit" formaction="http://probanno.systemsbiology.net/api/probanno/calculate" role="button" aria-pressed="false" type="submit" name="submit" id="submit">
+        <input class="submit" role="button" aria-pressed="false" type="submit" name="submit" id="submitProbannoCalculate">
       </form>
     </fieldset>
   </div class="closesWrapper">
@@ -228,7 +228,7 @@
       <legend>
         Upload a Metabolic Model:
       </legend>
-        <form action="http://probanno.systemsbiology.net/api/io/uploadmodel" method=post enctype=multipart/form-data>
+        <form method=post enctype=multipart/form-data id="formUploadModel">
             <input type=file name="file">
             <input type="text" id="upload_model_id" name="upload_model_id"/>
             <label for="upload_model_id">Model ID (optional, inferred from file if blank)</label>
@@ -242,6 +242,12 @@
     <p>ProbAnno is described in <cite>Benedict MN, Mundy MB, Henry CS, Chia N, Price ND, Likelihood-based gene annotations for gap filling and quality assessment in genome-scale metabolic models.<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4199484/">PLoS Comput Biol. 2014 Oct; 10(10): e1003882. PMID 25329157</a>.</cite>
     <p><a href="aboutProbAnno.html">Additional information about ProbAnno</a>
   </footer>
+  <script>
+      window.onload = function() {
+          document.getElementById("submitProbannoCalculate").formAction = getRootURL() + "/api/probanno/calculate";
+          document.getElementById("formUploadModel").action = getRootURL() + "/api/io/uploadmodel";
+      }
+  </script>
   <script src="{{url_for('static', filename='js/flask_probanno.js')}}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <script src="{{url_for('static', filename='js/jquery.dataTables.min.js')}}"></script>

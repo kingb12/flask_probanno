@@ -4,7 +4,7 @@
 
 // ============== STRING CONSTANTS (e.g. root URL, API links, etc.) ====================================================
 
-const ROOT_URL = "http://probanno.systemsbiology.net";
+const ROOT_URL = "http://probannoweb.systemsbiology.net";
 const LIST_MODELS_ENDPOINT = "/api/list/model";
 const LIST_PROBANNOS_ENDPOINT = "/api/list/probanno";
 const LIST_JOBS_ENDPOINT = "/api/list/job";
@@ -236,4 +236,8 @@ function checkJob(jobStatus, job_id) {
         status.innerHTML = "<b>" + args.data + "</b>";
         document.job_status = args.data;
     }
+}
+
+function getRootURL() {
+    return ROOT_URL;
 }
