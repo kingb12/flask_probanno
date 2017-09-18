@@ -1,6 +1,6 @@
 import cobra
 import json
-import probanno.probanno as probanno
+import probanno
 
 
 def model_to_json(model):

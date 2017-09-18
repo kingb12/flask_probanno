@@ -1,7 +1,6 @@
 from flask import request
 from models import session
 
-
 SESSION_ID = 'session_id'
 
 
@@ -10,12 +9,17 @@ def has_session():
     Returns True if a session cookie was supplied in the request, False otherwise
     :return: (Boolean) True if a session cookie was supplied in the request, False otherwise
     """
-    return request.cookies.get(SESSION_ID) is not None
+    # can either be a header or a cookie, default to header
+    return (request.headers is not None and request.headers.get(SESSION_ID) is not None) or \
+           (request.cookies is not None and request.cookies.get(SESSION_ID) is not None)
 
 
 def get_session_id():
     # print "get session cookie: ", request.cookies.get(SESSION_ID)
-    return session.get_session(request.cookies.get(SESSION_ID))[0] if has_session() else None
+    # can either be a header or a cookie, default to header
+    sesh = ((session.get_session(request.headers.get(SESSION_ID))) or
+                                 session.get_session(request.cookies.get(SESSION_ID))) if has_session() else None
+    return sesh[0] if sesh is not None else None
 
 
 def prepare_new_session():
@@ -24,6 +28,3 @@ def prepare_new_session():
     :return: Session ID as a string
     """
     return session.create_new_session()
-
-
-

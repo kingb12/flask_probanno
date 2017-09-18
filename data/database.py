@@ -24,6 +24,10 @@ LIST_MODELS_QUERY = 'SELECT mid FROM ' + MODEL + ' WHERE sid = ?'
 UPDATE_IN_JOBS_QUERY = 'UPDATE ' + JOB + ' SET ' + UPDATE_JOB_SCHEMA + ' WHERE jid = ?'
 LIST_PROBANNOS_QUERY = 'SELECT fasta_id FROM ' + PROBANNO
 LIST_JOBS_QUERY = 'SELECT * FROM Jobs WHERE sid = ?'
+CLEAR_SESSION_QUERY = 'DELETE FROM {0} WHERE sid = ?'
+CLEAR_PROBANNO_QUERY = 'DELETE FROM PROBANNO WHERE fasta_id= ?'
+
+
 def set_db(app, filename):
     global __database
     """
@@ -77,6 +81,7 @@ def list_probannos():
     result = curs.execute(LIST_PROBANNOS_QUERY, []).fetchall()
     return None if result is None else [r[0] for r in result]
 
+
 def list_jobs(session_id):
     curs = __database.engine
     result = curs.execute(LIST_JOBS_QUERY, [session_id]).fetchall()
@@ -92,3 +97,16 @@ def update_job(jid, session, job, target, status):
 def insert_job(jid, session, job, target, status):
     curs = __database.engine
     curs.execute(INSERT_INTO_JOBS_QUERY, [jid, session, job, target, status])
+
+
+def clear_session_values(sid, clear_session=False):
+    curs = __database.engine
+    curs.execute(CLEAR_SESSION_QUERY.format(PROBANNO), [sid])
+    curs.execute(CLEAR_SESSION_QUERY.format(JOB), [sid])
+    curs.execute(CLEAR_SESSION_QUERY.format(MODEL), [sid])
+    if clear_session:
+        curs.execute(CLEAR_SESSION_QUERY.format(SESSION), [sid])
+
+def clear_probanno(fasta_id):
+    curs = __database.engine
+    curs.execute(CLEAR_PROBANNO_QUERY, [fasta_id])

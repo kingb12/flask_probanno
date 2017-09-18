@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request, redirect, make_response, render_template
+from flask import Flask, request, redirect, make_response, render_template, jsonify
 from flask import flash
 import utils
 
@@ -45,6 +45,10 @@ def home_page():
 def gapfill_view():
     return make_response(render_template("gapfill.html"))
 
+@app.route('/api/session', methods=[GET])
+def get_session():
+    return jsonify(session_management.prepare_new_session())
+
 @app.route('/api/io/uploadmodel', methods=[GET, POST])
 def upload_model():
     if request.method == 'POST':
@@ -69,7 +73,7 @@ def upload_model():
     # TODO: Replace this with something nicer. Models View page, hiding the 'get' aspect of this API?
 
 
-@app.route('/api/probanno/calculate', methods=[GET, POST])
+@app.route('/api/probanno/calculate', methods=[GET, PUT])
 def get_reaction_probabilities():
     return probanno_management.get_reaction_probabilities(app)
 

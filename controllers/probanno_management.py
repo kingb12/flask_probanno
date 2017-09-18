@@ -1,4 +1,4 @@
-from flask import request, abort, send_from_directory, render_template
+from flask import request, abort, send_from_directory, render_template, jsonify
 from redis import Redis
 from rq import Queue
 import probanno
@@ -7,7 +7,7 @@ import data.database as db
 import utils
 import json
 import exceptions
-from job import Job, job_status_page, PROBANNO_COMPLETE_URL
+from job import Job, job_status_page, PROBANNO_COMPLETE_URL, get_job, COMPLETE
 
 # TODO: (PW-10) Make this relative reference cleaner with a config file
 # These correspond to the drop down menu items in the view
@@ -21,35 +21,45 @@ FASTA = 'fasta'
 TEMPLATE = 'template'
 GET = 'GET'
 POST = 'POST'
+PUT = 'PUT'
 CALCULATE_PROBANNO_JOB = 'calculate_probanno'
 
 
 probanno_queue = Queue(connection=Redis())
 
+
 def get_reaction_probabilities(app, fasta_id=None, fasta_file=None):
     # we will permit sessions that are None to save reaction probabilities
     session = session_management.get_session_id()
+    if session is None:
+        abort(400)
     template = None
     if request.method == GET:
         fasta_id = request.args[FASTA_ID] if fasta_id is None else fasta_id
         if fasta_id is None and FASTA in request.files:
             utils.upload_file(app, request.files[FASTA])
-        fasta_file = get_fasta_by_id(app, fasta_id) if fasta_file is None else fasta_file
-        template = request.args[TEMPLATE] if TEMPLATE in request.form else DEFAULT_TEMPLATE
-    if request.method == POST:
+        try:
+            fasta_file = get_fasta_by_id(app, fasta_id) if fasta_file is None else fasta_file
+        except probanno.FastaNotFoundError:
+            return abort(404)
+        template = request.args[TEMPLATE] if TEMPLATE in request.args else DEFAULT_TEMPLATE
+    if request.method == PUT:
         fasta_id = request.form[FASTA_ID] if fasta_id is None else fasta_id
-        if fasta_id is None and FASTA in request.files:
+        if fasta_id is None:
+            abort(400)
+        if FASTA in request.files:
             fasta_file = utils.upload_file(app, request.files[FASTA])
-        fasta_file = get_fasta_by_id(app, fasta_id) if fasta_file is None else fasta_file
+        else:
+            abort(400)
         template = request.form[TEMPLATE] if TEMPLATE in request.form else DEFAULT_TEMPLATE
     template_file = TEMPLATE_FILES[template] if template in TEMPLATE_FILES else TEMPLATE_FILES[DEFAULT_TEMPLATE]
     likelihoods = None
-    if fasta_id is not None and fasta_id != '':
+    if request.method == GET and fasta_id is not None and fasta_id != '':
         likelihoods = db.find_by_id(db.PROBANNO, fasta_id)
-    if likelihoods is not None:
-        likelihoods = likelihoods[-1]
-    if likelihoods is not None:
-        return probanno_complete_view(fasta_id=fasta_id)
+        if likelihoods is not None:
+            job = Job(session, CALCULATE_PROBANNO_JOB, fasta_id, dummy=True)
+            job.status = COMPLETE
+            return jsonify(job.to_dict_dto())
     gen_id = request.args[FASTA_ID] if FASTA_ID in request.args and request.args[FASTA_ID] is not None else fasta_file
     filename = app.config['UPLOAD_FOLDER'] + fasta_file
     template_model_file = app.config['MODEL_TEMPLATES'] + template_file
@@ -57,7 +67,7 @@ def get_reaction_probabilities(app, fasta_id=None, fasta_file=None):
     probanno_queue.enqueue(_async_get_reaction_probabilities,
                            job, fasta_id, session, fasta_file, template_model_file, gen_id,
                            job_id=job.id, timeout=600)
-    return job_status_page(job.id, PROBANNO_COMPLETE_URL + '?fasta_id=' + fasta_id)
+    return jsonify(get_job(job.id).to_dict_dto())
 
 
 def _async_get_reaction_probabilities(job, fasta_id, session, file_name, template_model_file, genome_id):

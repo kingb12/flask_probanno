@@ -30,61 +30,75 @@ schemes:
 - "https"
 - "http"
 paths:
+  /session:
+    get:
+      tags:
+      - "session"
+      summary: "Get a new session"
+      description: "Get a new session token, a UUID associated with all actions for this session. This is in lieu of more sophisticated authorization schemes."
+      operationId: "getSession"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Session"
   /probanno/calculate:
     get:
       tags:
-      - "pet"
+      - "probanno"
       summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
+      description: "Calculate reaction likelihoods by Uniprot taxonomic identifie"
+      operationId: "calculateLikelihoods"
       produces:
       - "application/json"
       parameters:
       - name: "fasta_id"
         in: "query"
-        description: "Calculate reaction likelihoods by Uniprot taxonomic identifier"
+        description: "Uniprot taxonomic identifier for target genome sequence (FASTA)"
         required: true
         type: "string"
+      - name: "session_id"
+        in: "header"
+        description: "Session to associate with this job"
+        required: true
       responses:
         200:
           description: "successful operation"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
+            $ref: "#/definitions/Job"
         400:
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+          description: "Bad or missing session"
+        404:
+          description: "FASTA not found"
     put:
       tags:
-      - "pet"
-      summary: "Update an existing pet"
-      operationId: "updatePet"
-      consumes:
-      - "application/json"
+      - "probanno"
+      summary: "Calculate reaction likelihoods"
+      description: "Calculate reaction likelihoods by FASTA file"
+      operationId: "calculateLikelihoods"
       produces:
       - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
+      - name: "fasta"
+        in: "formData"
+        description: "Target genome sequence in FASTA format"
         required: true
-        schema:
-          $ref: "#/definitions/Pet"
+        type: file
+      - name: "session_id"
+        in: "header"
+        description: "Session to associate with this job"
+        required: true
       responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Job"
         400:
-          description: "Invalid ID supplied"
+          description: "Bad or missing session"
         404:
-          description: "Pet not found"
-        405:
-          description: "Validation exception"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+          description: "FASTA not found"
   /pet/findByStatus:
     get:
       tags:
@@ -311,12 +325,12 @@ paths:
         description: "order placed for purchasing the pet"
         required: true
         schema:
-          $ref: "#/definitions/Order"
+          $ref: "#/definitions/Job"
       responses:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Order"
+            $ref: "#/definitions/Job"
         400:
           description: "Invalid Order"
   /store/order/{orderId}:
@@ -342,7 +356,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Order"
+            $ref: "#/definitions/Job"
         400:
           description: "Invalid ID supplied"
         404:
@@ -555,7 +569,7 @@ securityDefinitions:
     name: "api_key"
     in: "header"
 definitions:
-  Order:
+  Job:
     type: "object"
     properties:
       id:
@@ -582,16 +596,11 @@ definitions:
         default: false
     xml:
       name: "Order"
-  Category:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
+  Session:
+    type: "string"
+    description: "Unique session identifier"
+    format: "uuid"
+    example: "a70a6344-3c55-48fa-8b60-db71858e810b"
   User:
     type: "object"
     properties:
@@ -636,7 +645,7 @@ definitions:
         type: "integer"
         format: "int64"
       category:
-        $ref: "#/definitions/Category"
+        $ref: "#/definitions/Session"
       name:
         type: "string"
         example: "doggie"
