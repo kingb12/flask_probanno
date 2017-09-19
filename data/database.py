@@ -16,6 +16,7 @@ TABLES = {SESSION: 'sid', MODEL: 'mid', PROBANNO: 'fasta_id', JOB: 'jid'}
 
 FIND_BY_ID_QUERY = 'SELECT * FROM {0} WHERE {1} = ?'
 FIND_MODEL_QUERY = 'SELECT * FROM ' + MODEL + ' WHERE sid = ? AND mid = ?'
+FIND_PROBANNO_QUERY = 'SELECT * FROM Probanno pr, Probs pb WHERE pr.probs_id = pb.id AND pr.sid = ? AND pr.fasta_id = ?'
 INSERT_INTO_SESSION_QUERY = 'INSERT INTO ' + SESSION + SESSION_SCHEMA + ' VALUES (?, ?)'
 INSERT_INTO_MODEL_QUERY = 'INSERT INTO ' + MODEL + MODEL_SCHEMA + ' VALUES (?, ?, ?)'
 INSERT_INTO_PROBANNO_QUERY = 'INSERT INTO ' + PROBANNO + PROBANNO_SCHEMA + ' VALUES (?, ?, ?)'
@@ -76,7 +77,7 @@ def list_models(session_id):
     return None if result is None else [r[0] for r in result]
 
 
-def list_probannos():
+def list_probannos(session_id):
     curs = __database.engine
     result = curs.execute(LIST_PROBANNOS_QUERY, []).fetchall()
     return None if result is None else [r[0] for r in result]
@@ -110,3 +111,9 @@ def clear_session_values(sid, clear_session=False):
 def clear_probanno(fasta_id):
     curs = __database.engine
     curs.execute(CLEAR_PROBANNO_QUERY, [fasta_id])
+
+
+def find_probanno(session_id, fasta_id):
+    curs = __database.engine
+    result = curs.execute(FIND_PROBANNO_QUERY, [session_id, fasta_id]).fetchone()
+    return None if result is None else result.values()

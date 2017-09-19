@@ -48,8 +48,8 @@ paths:
     get:
       tags:
       - "probanno"
-      summary: "Finds Pets by status"
-      description: "Calculate reaction likelihoods by Uniprot taxonomic identifie"
+      summary: Calculate Reaction Likelihoods
+      description: "Calculate reaction likelihoods by Uniprot taxonomic identifier"
       operationId: "calculateLikelihoods"
       produces:
       - "application/json"
@@ -95,6 +95,34 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/Job"
+        400:
+          description: "Bad or missing session"
+        404:
+          description: "FASTA not found"
+  /probanno:
+    get:
+      tags:
+      - "probanno"
+      summary: Retrieve reaction likelihoods
+      description: "Retrieve reaction likelihoods"
+      operationId: "getLikelihoods"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fasta_id"
+        in: "query"
+        description: "Uniprot taxonomic identifier for target genome sequence (FASTA)"
+        required: true
+        type: "string"
+      - name: "session_id"
+        in: "header"
+        description: "Session associated with the job in which they were calculated"
+        required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Probanno"
         400:
           description: "Bad or missing session"
         404:
@@ -601,7 +629,7 @@ definitions:
     description: "Unique session identifier"
     format: "uuid"
     example: "a70a6344-3c55-48fa-8b60-db71858e810b"
-  User:
+  Probanno:
     type: "object"
     properties:
       id:

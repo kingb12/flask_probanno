@@ -77,6 +77,12 @@ def upload_model():
 def get_reaction_probabilities():
     return probanno_management.get_reaction_probabilities(app)
 
+
+@app.route('/api/probanno', methods=[GET])
+def get_probanno():
+    return probanno_management.retrieve_probanno()
+
+
 @app.route('/api/model/gapfill')
 def gapfill():
     return model_management.gapfill_model(app)

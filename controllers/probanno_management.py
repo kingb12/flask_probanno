@@ -105,7 +105,7 @@ def download_probanno(app):
     fasta_id = request.args[FASTA_ID] if FASTA_ID in request.args else (request.form[FASTA_ID] if FASTA_ID in request.form else None)
     if fasta_id is None:
         abort(400)
-    probanno = db.find_by_id(db.PROBANNO, fasta_id)[-1]
+    probanno = retrieve_probanno(fasta_id)
     if probanno is None:
         abort(404)
     filename = str(fasta_id) + '.json'
@@ -121,8 +121,15 @@ def probanno_complete_view(fasta_id=None):
         raise exceptions.InvalidUsage()
     return render_template("probanno_complete.html", probanno_id=fasta_id)
 
-def retrieve_probanno(fasta_id):
-    if fasta_id is not None and fasta_id != '':
-        likelihoods = db.find_by_id(db.PROBANNO, fasta_id)
-    if likelihoods is not None:
-        return likelihoods[-1]
+
+def retrieve_probanno():
+    session = session_management.get_session_id()
+    if session is None:
+        abort(400)
+    fasta_id = request.args[FASTA_ID] if FASTA_ID in request.args else None
+    if fasta_id is None or fasta_id == '':
+        abort(400)
+    likelihoods = db.find_probanno(session, fasta_id)
+    if likelihoods is None:
+        abort(404)
+    return jsonify(likelihoods[-1])
