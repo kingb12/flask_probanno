@@ -15,7 +15,7 @@ GET = 'GET'
 
 DATABASE = '/data/db/probannoweb.db'
 UPLOAD_FOLDER = '/tmp/'
-MODEL_TEMPLATES_FOLDER = '/../probanno_standalone/templates/'
+MODEL_TEMPLATES_FOLDER = '/probannoenv/src/probanno/templates/'
 UNIVERSAL_MODELS_FOLDER = '/data/universal/'
 ALLOWED_EXTENSIONS = {'json', 'fasta', 'fa'}
 SOLVER = 'gurobi'
@@ -108,7 +108,7 @@ def list_models():
     return model_management.list_models()
 
 
-@app.route('/api/list/probanno')
+@app.route('/api/probanno/list')
 def list_probannos():
     return probanno_management.list_probannos()
 
