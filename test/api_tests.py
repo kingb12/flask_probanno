@@ -120,6 +120,13 @@ class TestProbannoMethods(unittest.TestCase):
             response = make_api_request("/probanno", GET, authorize_headers(str(uuid.uuid4())),
                                         params={"fasta_id": FASTA_1})
             assert response.status_code == 400
+            response = make_api_request("/probanno", GET, HEADERS,
+                                        params=None)
+            assert response.status_code == 400
+            response = make_api_request("/probanno", GET, authorize_headers(session),
+                                        params={"fasta_id": NOT_A_FASTA})
+            assert response.status_code == 404
+
         finally:
             # clean up
             db.clear_session_values(session, clear_session=True)
@@ -160,6 +167,36 @@ class TestProbannoMethods(unittest.TestCase):
             # clean up
             db.clear_session_values(session, clear_session=True)
 
+    def test_download_likelihoods(self):
+        session = make_and_unpack_request("/session", GET, HEADERS)
+        try:
+            # search for, expect missing
+            response = make_api_request("/probanno/download", GET, authorize_headers(session),
+                                          params={"fasta_id": CACHED_FASTA})
+            assert(response.status_code == 404)
+            # cached: populate it for our session
+            job = make_and_unpack_request("/probanno/calculate", GET, authorize_headers(session),
+                                          params={"fasta_id": CACHED_FASTA})
+            assert job['sid'] == session
+            assert job['job'] == CALCULATE_PROBANNO_JOB
+            assert job['target'] == CACHED_FASTA
+            assert job['status'] == COMPLETE
+
+            # Now actually check retrieval
+            result = make_api_request("/probanno/download", GET, authorize_headers(session),
+                                          params={"fasta_id": CACHED_FASTA})
+            assert(type(result.content) == str)
+            # 400 No session
+            response = make_api_request("/probanno", GET, HEADERS,
+                                        params={"fasta_id": FASTA_1})
+            assert response.status_code == 400
+            # 400 bad session
+            response = make_api_request("/probanno", GET, authorize_headers(str(uuid.uuid4())),
+                                        params={"fasta_id": FASTA_1})
+            assert response.status_code == 400
+        finally:
+            # clean up
+            db.clear_session_values(session, clear_session=True)
 
 
 def make_api_request(path, method, headers, params=None, files=None, data=None):
@@ -173,6 +210,7 @@ def make_api_request(path, method, headers, params=None, files=None, data=None):
     response = requests.request(method, BASE_URL + path, headers=headers, params=params, files=files, data=data)
     return response
 
+
 def make_and_unpack_request(path, method, headers, params=None, files=None, data=None):
     """
        helper method for making a request and unpacking the JSON result
@@ -183,6 +221,7 @@ def make_and_unpack_request(path, method, headers, params=None, files=None, data
        """
     response = make_api_request(path, method, headers, params=params, files=files, data=data)
     return json.loads(response.text)
+
 
 def authorize_headers(session):
     auth_headers = {"session_id": session}

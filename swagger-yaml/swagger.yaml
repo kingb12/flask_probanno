@@ -127,6 +127,34 @@ paths:
           description: "Bad or missing session"
         404:
           description: "FASTA not found"
+  /probanno/download:
+    get:
+      tags:
+      - "probanno"
+      summary: Download reaction likelihoods
+      description: "Download reaction likelihoods"
+      operationId: "downloadReactions"
+      produces:
+      - "text/plain"
+      parameters:
+      - name: "fasta_id"
+        in: "query"
+        description: "Uniprot taxonomic identifier for target genome sequence (FASTA)"
+        required: true
+        type: "string"
+      - name: "session_id"
+        in: "header"
+        description: "Session associated with the job in which they were calculated"
+        required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Probanno"
+        400:
+          description: "Bad or missing session"
+        404:
+          description: "FASTA not found"
   /probanno/list:
     get:
       tags:

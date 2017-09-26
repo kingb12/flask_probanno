@@ -82,7 +82,6 @@ def insert_probanno(fasta_id, name, sid, probs_id, likelihoods):
         connection.execute(INSERT_INTO_PROBS_QUERY, [probs_id, likelihoods, name])
 
 
-
 def list_models(session_id):
     curs = __database.engine
     result = curs.execute(LIST_MODELS_QUERY, [session_id]).fetchall()
@@ -93,6 +92,7 @@ def list_probannos(session_id):
     curs = __database.engine
     result = curs.execute(LIST_PROBANNOS_QUERY, [session_id]).fetchall()
     return None if result is None else [list(r) for r in result]
+
 
 def list_jobs(session_id):
     curs = __database.engine
@@ -123,6 +123,7 @@ def clear_session_values(sid, clear_session=False):
     curs.execute(CLEAR_SESSION_QUERY.format(MODEL), [sid])
     if clear_session:
         curs.execute(CLEAR_SESSION_QUERY.format(SESSION), [sid])
+
 
 def clear_probanno(fasta_id):
     curs = __database.engine

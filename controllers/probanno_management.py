@@ -109,15 +109,18 @@ def list_probannos():
 
 
 def download_probanno(app):
-    fasta_id = request.args[FASTA_ID] if FASTA_ID in request.args else (request.form[FASTA_ID] if FASTA_ID in request.form else None)
-    if fasta_id is None:
+    session = session_management.get_session_id()
+    if session is None:
         abort(400)
-    probanno = retrieve_probanno(fasta_id)
-    if probanno is None:
+    fasta_id = request.args[FASTA_ID] if FASTA_ID in request.args else None
+    if fasta_id is None or fasta_id == '':
+        abort(400)
+    likelihoods = db.retrieve_probanno(session, fasta_id)
+    if likelihoods is None:
         abort(404)
     filename = str(fasta_id) + '.json'
     with open(app.config['UPLOAD_FOLDER'] + filename, 'w') as f:
-        f.write(json.dumps(probanno))
+        f.write(json.dumps(likelihoods[-2]))
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 

@@ -118,7 +118,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-@app.route('/api/io/downloadprobanno')
+@app.route('/api/probanno/download')
 def download_probanno():
     return probanno_management.download_probanno(app)
 
