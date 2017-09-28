@@ -1,9 +1,13 @@
+import os
+
 import models.cobra_modeling as cobra_modeling
 import probanno_management
-from flask import request, send_from_directory, render_template, abort
+from flask import request, send_from_directory, render_template, abort, Response, jsonify
 import data.database as db
 import session_management
 import json
+
+import utils
 from job import Job, job_status_page, GAPFILL_COMPLETE_URL
 from rq import Queue
 from redis import Redis
@@ -14,24 +18,32 @@ MICROBIAL = 'Microbial'
 GAPFILL_MODEL_JOB = 'gapfill_model'
 MODEL_ID = 'model_id'
 model_queue = Queue(connection=Redis(), default_timeout=60)
+ALLOWED_EXTENSIONS = {'json', 'fasta', 'fa'}
 
 
-def load_model(filename):
-    # load model w/ cobra
-    model = cobra_modeling.from_json_file(filename)
+def load_model(app):
     session = session_management.get_session_id()
-    model_id = request.form['upload_model_id'] if request.form['upload_model_id'] is not None else (
-    model.id if model.id is not None else str(request.date))
-    print request.form['upload_model_id']
-    if session is not None and db.find_model(session, model_id) is None:
-        print("hello")
-        db.insert_model(session, model_id, cobra_modeling.model_to_json(model))
-    else:
-        # TODO: Make this a 400
-        if session is None:
-            return "Session-less state"
-        else:
-            return "model already uploaded"
+    if session is None:
+        abort(400)
+    if 'file' not in request.files:
+        abort(400)
+    file = request.files['file']
+    filename = utils.upload_file(app, file, ALLOWED_EXTENSIONS)
+    # load model w/ cobra
+    model = None
+    try:
+        model = cobra_modeling.from_json_file(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    except BaseException as e:
+        abort(400)
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    if MODEL_ID not in request.form:
+        abort(400)
+    model_id = request.form[MODEL_ID]
+    if db.find_model(session, model_id) is not None:
+        db.delete_model(session, model_id)
+    db.insert_model(session, model_id, cobra_modeling.model_to_json(model))
+    return Response()
+
 
 
 def run_fba():
@@ -106,15 +118,27 @@ def model_complete_view(model_id=None):
 
 
 def download_model(app):
-    model_id = request.args[MODEL_ID] if MODEL_ID in request.args else (
-        request.form[MODEL_ID] if MODEL_ID in request.form else None)
-    session_id = request.cookies.get(SESSION_ID)
-    if model_id is None:
+    session = session_management.get_session_id()
+    if session is None:
         abort(400)
-    probanno = db.find_model(session_id, model_id)
-    if probanno is None:
+    if MODEL_ID not in request.args:
+        abort(400)
+    model_id = request.args[MODEL_ID]
+    model = db.find_model(session, model_id)
+    if model is None:
         abort(404)
     filename = str(model_id) + '.json'
     with open(app.config['UPLOAD_FOLDER'] + filename, 'w') as f:
-        f.write(json.dumps(probanno))
+        f.write(json.dumps(model[-1]))
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+
+def get_model(app):
+    session = session_management.get_session_id()
+    if session is None:
+        abort(400)
+    if MODEL_ID not in request.args:
+        abort(400)
+    model = db.find_model(session, request.args[MODEL_ID])
+    if model is None:
+        abort(404)
+    return Response(model[-1], mimetype='application/json')

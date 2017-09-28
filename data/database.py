@@ -37,6 +37,8 @@ CLEAR_SESSION_QUERY = 'DELETE FROM {0} WHERE sid = ?'
 CLEAR_PROBS_QUERY = 'DELETE FROM ' + PROBS + ' WHERE id in ("{0}")'
 CLEAR_PROBANNO_QUERY = 'DELETE FROM ' + PROBANNO + ' WHERE fasta_id= ?'
 
+DELETE_MODEL_QUERY = 'DELETE FROM ' + MODEL + ' WHERE sid = ? AND mid = ?'
+
 
 def set_db(app, filename):
     global __database
@@ -147,3 +149,7 @@ def retrieve_probanno(session_id, fasta_id):
     curs = __database.engine
     result = curs.execute(RETRIEVE_PROBANNO_QUERY, [session_id, fasta_id]).fetchone()
     return None if result is None else result.values()
+
+def delete_model(session_id, model_id):
+    curs = __database.engine
+    curs.execute(DELETE_MODEL_QUERY, [session_id, model_id])

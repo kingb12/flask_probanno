@@ -45,33 +45,22 @@ def home_page():
 def gapfill_view():
     return make_response(render_template("gapfill.html"))
 
+
 @app.route('/api/session', methods=[GET])
 def get_session():
     return jsonify(session_management.prepare_new_session())
 
-@app.route('/api/io/uploadmodel', methods=[GET, POST])
-def upload_model():
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        filename = utils.upload_file(app, file, ALLOWED_EXTENSIONS)
-        model_management.load_model(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return redirect('/')
-    return '''
-    <!doctype html>
-    <title>Upload new Model (JSON format)</title>
-    <h1>Upload new Model (JSON  format)</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
-    # TODO: Replace this with something nicer. Models View page, hiding the 'get' aspect of this API?
 
+@app.route('/api/model', methods=[PUT, POST])
+def upload_model():
+    if request.method == POST or request.method == PUT:
+        return model_management.load_model(app)
+
+
+@app.route('/api/model', methods=[GET])
+def get_model():
+    if request.method == GET:
+        return model_management.get_model(app)
 
 @app.route('/api/probanno/calculate', methods=[GET, PUT])
 def get_reaction_probabilities():
@@ -103,7 +92,7 @@ def hello():
     return 'hello'
 
 
-@app.route('/api/list/model')
+@app.route('/api/model/list')
 def list_models():
     return model_management.list_models()
 
@@ -122,13 +111,16 @@ def allowed_file(filename):
 def download_probanno():
     return probanno_management.download_probanno(app)
 
-@app.route('/api/io/downloadmodel')
+
+@app.route('/api/model/download')
 def download_model():
     return model_management.download_model(app)
+
 
 @app.route('/api/job/checkjob')
 def check_job():
     return job.check_job()
+
 
 @app.route('/api/list/job')
 def list_jobs():
