@@ -10,7 +10,7 @@ import data.database as db
 import utils
 import json
 import exceptions
-from job import Job, job_status_page, PROBANNO_COMPLETE_URL, get_job, COMPLETE
+from job import Job, job_status_page, PROBANNO_COMPLETE_URL, retrieve_job, COMPLETE
 
 # TODO: (PW-10) Make this relative reference cleaner with a config file
 # These correspond to the drop down menu items in the view
@@ -69,7 +69,7 @@ def get_reaction_probabilities(app, fasta_id=None, fasta_file=None):
     probanno_queue.enqueue(_async_get_reaction_probabilities,
                            job, fasta_id, fasta_name, session, fasta_file, template_model_file, gen_id,
                            job_id=job.id, timeout=600)
-    return jsonify(get_job(job.id).to_dict_dto())
+    return jsonify(retrieve_job(job.id).to_dict_dto())
 
 
 def _async_get_reaction_probabilities(job, fasta_id, fasta_name, session, file_name, template_model_file, genome_id):
@@ -132,7 +132,7 @@ def probanno_complete_view(fasta_id=None):
     return render_template("probanno_complete.html", probanno_id=fasta_id)
 
 
-def retrieve_probanno():
+def get_probanno():
     session = session_management.get_session_id()
     if session is None:
         abort(400)

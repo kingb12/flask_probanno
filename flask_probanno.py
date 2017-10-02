@@ -69,7 +69,7 @@ def get_reaction_probabilities():
 
 @app.route('/api/probanno', methods=[GET])
 def get_probanno():
-    return probanno_management.retrieve_probanno()
+    return probanno_management.get_probanno()
 
 
 @app.route('/api/model/gapfill')
@@ -122,26 +122,35 @@ def check_job():
     return job.check_job()
 
 
-@app.route('/api/list/job')
+@app.route('/api/job/list', methods=[GET])
 def list_jobs():
     return job.list_jobs()
+
+
+@app.route('/api/job', methods=[GET])
+def get_job():
+    return job.get_job()
 
 
 @app.route('/view/probanno/complete')
 def probanno_complete():
     return probanno_management.probanno_complete_view()
 
+
 @app.route('/view/model/complete')
 def model_complete():
     return model_management.model_complete_view()
+
 
 @app.route('/aboutProbAnno.html')
 def about():
     return render_template("aboutProbAnno.html")
 
+
 @app.route('/view/job/status')
 def job_status():
     return job.view_status()
+
 
 if __name__ == '__main__':
     app.run()

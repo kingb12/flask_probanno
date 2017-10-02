@@ -1,5 +1,5 @@
 import uuid
-from flask import request, abort, send_from_directory, render_template
+from flask import request, abort, send_from_directory, render_template, jsonify
 from exceptions import InvalidUsage
 from redis import Redis
 from rq import Queue
@@ -59,6 +59,8 @@ class Job:
 
     @classmethod
     def from_db_tuple(cls, tup):
+        if tup is None:
+            return None
         job = cls(tup[1], tup[2], tup[3], dummy=True)
         job.id = tup[0]
         job.status = tup[4]
@@ -81,13 +83,28 @@ def job_status_page(job_id, success_url):
     return render_template("check_job.html", job_id=job_id, success_url=success_url)
 
 
-def get_job(job_id):
+def get_job():
+    session = session_management.get_session_id()
+    if session is None:
+        abort(400)
+    if JOB_ID not in request.args:
+        abort(400)
+    job = retrieve_job(request.args[JOB_ID])
+    if job is None:
+        abort(404)
+    return jsonify(job.to_dict_dto())
+
+
+def retrieve_job(job_id):
     return Job.from_db_tuple(db.find_by_id(db.JOB, job_id))
 
 
 def list_jobs():
-    session_id = session_management.get_session_id()
-    return json.dumps(db.list_jobs(session_id))
+    session = session_management.get_session_id()
+    if session is None:
+        abort(400)
+    jobs = [Job.from_db_tuple(job).to_dict_dto() for job in db.list_jobs(session)]
+    return jsonify(jobs)
 
 
 def view_status():
