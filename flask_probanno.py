@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, request, redirect, make_response, render_template, jsonify
+from flask_swagger import swagger
 from flask import flash
 import utils
 
@@ -18,7 +19,7 @@ UPLOAD_FOLDER = '/tmp/'
 MODEL_TEMPLATES_FOLDER = '/probannoenv/src/probanno/templates/'
 UNIVERSAL_MODELS_FOLDER = '/data/universal/'
 ALLOWED_EXTENSIONS = {'json', 'fasta', 'fa'}
-SOLVER = 'gurobi'
+SOLVER = 'cplex'
 
 # Set up on first run
 app = Flask(__name__)
@@ -30,9 +31,16 @@ app.config['UNIVERSAL_MODELS'] = os.path.dirname(os.path.realpath(__file__)) + U
 app.config['SOLVER'] = SOLVER
 db.set_db(app, os.path.dirname(os.path.realpath(__file__)) + DATABASE)
 
+#  ROUTES: Below are definitions for what occurs when a URL is reached using one of the HTTP methods. In short, the
+#  route tag calls the function whenever a request targets a particular URL. These are separated into two sections, one
+#  for views and functions related to the web-site, and ones beginning with /api/, which are for the underlying web
+#  web service.
+
+#  VIEW ROUTES
 
 @app.route('/')
 def home_page():
+    # Displays the users home page
     resp = make_response(render_template("index.html"))
     if session_management.has_session():
         session = session_management.get_session_id()
@@ -43,8 +51,32 @@ def home_page():
 
 @app.route('/gapfillmodel')
 def gapfill_view():
+    # Displays a page for submission of gap-filling jobs
     return make_response(render_template("gapfill.html"))
 
+
+@app.route('/view/probanno/complete')
+def probanno_complete():
+    # Displays a page indicating a probanno job has completed, and provides a download link
+    return probanno_management.probanno_complete_view()
+
+@app.route('/view/model/complete')
+def model_complete():
+    # Displays a page indicating a gapfill job has completed, and provides a download link
+    return model_management.model_complete_view()
+
+@app.route('/aboutProbAnno.html')
+def about():
+    # Displays an about page
+    return render_template("aboutProbAnno.html")
+
+@app.route('/view/job/status')
+def job_status():
+    # Displays a page with information on a job. Has some status-checking logic, but eventually a template is rendered
+    return job.view_status()
+
+
+# API ROUTES
 
 @app.route('/api/session', methods=[GET])
 def get_session():
@@ -61,6 +93,7 @@ def upload_model():
 def get_model():
     if request.method == GET:
         return model_management.get_model(app)
+
 
 @app.route('/api/probanno/calculate', methods=[GET, PUT])
 def get_reaction_probabilities():
@@ -126,6 +159,14 @@ def check_job():
 def list_jobs():
     return job.list_jobs()
 
+@app.route('/spec')
+def spec():
+    # Renders the template indicating the API specification. Make sure the file is up to date!
+    # Basic workflow I follow
+    swag = swagger(app)
+    swag['info']['version'] = "1.0"
+    swag['info']['title'] = "Probanno API"
+    return jsonify(swag)
 
 @app.route('/api/job', methods=[GET])
 def get_job():
