@@ -4,11 +4,10 @@ import json
 import uuid
 
 from flask_probanno import GET, POST, PUT
-from data import database as db
 from controllers.probanno_management import CALCULATE_PROBANNO_JOB
 from controllers.job import COMPLETE
 
-BASE_URL = "http://probanno.systemsbiology.net/api"
+BASE_URL = "http://probannoweb.systemsbiology.net/api"
 HEADERS = {'cache-control': 'no-cache'}
 FASTA_1 = '267377'
 CACHED_FASTA = '243232'
@@ -27,7 +26,7 @@ class TestSessionMethods(unittest.TestCase):
             # exception below indicates failure
             my_uuid = uuid.UUID(session)
         finally:
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
 
 class TestProbannoMethods(unittest.TestCase):
@@ -35,8 +34,6 @@ class TestProbannoMethods(unittest.TestCase):
     def test_calculate_likelihoods_get(self):
         session = make_and_unpack_request("/session", GET, HEADERS)
         try:
-            # remove any values that would have been cached
-            db.clear_probanno(FASTA_1)
             # un-cached
             job = make_and_unpack_request("/probanno/calculate", GET, authorize_headers(session), params={"fasta_id": FASTA_1})
             assert job['sid'] == session
@@ -61,13 +58,13 @@ class TestProbannoMethods(unittest.TestCase):
             assert response.status_code == 400
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
     def test_calculate_likelihoods_put(self):
         session = make_and_unpack_request("/session", GET, HEADERS)
         try:
             # remove any values that would have been cached
-            db.clear_probanno(FASTA_1)
+            clear_probanno(FASTA_1)
             files = {'fasta': open('267377.fasta', 'rb')}
             data = {'fasta_id': MY_FASTA_NAME}
             # un-cached
@@ -92,7 +89,7 @@ class TestProbannoMethods(unittest.TestCase):
             assert response.status_code == 400
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
     def test_get_likelihoods(self):
         session = make_and_unpack_request("/session", GET, HEADERS)
@@ -130,7 +127,7 @@ class TestProbannoMethods(unittest.TestCase):
 
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
     def test_list_likelihoods(self):
         session = make_and_unpack_request("/session", GET, HEADERS)
@@ -166,7 +163,7 @@ class TestProbannoMethods(unittest.TestCase):
             assert response.status_code == 400
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
     def test_download_likelihoods(self):
         session = make_and_unpack_request("/session", GET, HEADERS)
@@ -198,7 +195,7 @@ class TestProbannoMethods(unittest.TestCase):
             assert response.status_code == 400
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
 
 class TestModelMethods(unittest.TestCase):
@@ -238,7 +235,7 @@ class TestModelMethods(unittest.TestCase):
             assert response.status_code == 404
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
     def test_download_model(self):
         model_id = "my_model"
@@ -276,7 +273,7 @@ class TestModelMethods(unittest.TestCase):
             assert response.status_code == 404
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
     def test_model_put(self):
         model_id = "my_model"
@@ -315,7 +312,7 @@ class TestModelMethods(unittest.TestCase):
             assert response.status_code == 400
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
             f.close()
 
     def test_model_post(self):
@@ -350,7 +347,7 @@ class TestModelMethods(unittest.TestCase):
             assert response.status_code == 400
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
             f.close()
 
     def test_model_list(self):
@@ -377,7 +374,7 @@ class TestModelMethods(unittest.TestCase):
             assert response.status_code == 400
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
     def test_model_gapfill(self):
         model_id = "my_model"
@@ -447,7 +444,7 @@ class TestModelMethods(unittest.TestCase):
             assert response.status_code == 400
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
 
 class TestJobMethods(unittest.TestCase):
@@ -481,7 +478,7 @@ class TestJobMethods(unittest.TestCase):
             assert response.status_code == 400
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
     def test_list_job(self):
         session = make_and_unpack_request("/session", GET, HEADERS)
@@ -502,7 +499,7 @@ class TestJobMethods(unittest.TestCase):
             assert response.status_code == 400
         finally:
             # clean up
-            db.clear_session_values(session, clear_session=True)
+            clear_session_values(session, clear_session=True)
 
 def make_api_request(path, method, headers, params=None, files=None, data=None):
     """
@@ -532,6 +529,10 @@ def authorize_headers(session):
     auth_headers = {"session_id": session}
     auth_headers.update(HEADERS)
     return auth_headers
+
+
+def clear_session_values(session, clear_session=False):
+    make_and_unpack_request('/session/clear', GET, authorize_headers(session), params={'clear_session': clear_session})
 
 
 if __name__ == '__main__':

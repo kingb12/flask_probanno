@@ -27,5 +27,5 @@ def get_session(session_id):
     return db.find_by_id(db.SESSION, str(session_id))
 
 
-
-
+def clear_session(sesh, clear_sesh=False):
+    return db.clear_session_values(sesh, clear_session=clear_sesh)

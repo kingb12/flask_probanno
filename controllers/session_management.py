@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, abort
 from models import session
 
 SESSION_ID = 'session_id'
@@ -28,3 +28,10 @@ def prepare_new_session():
     :return: Session ID as a string
     """
     return session.create_new_session()
+
+
+def clear_session():
+    sesh= get_session_id()
+    if sesh is None:
+        abort(400)
+    return session.clear_session(sesh, request.args['clear_session'] if 'clear_session' in request.args else None)

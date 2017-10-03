@@ -170,6 +170,10 @@ def spec():
 def get_job():
     return job.get_job()
 
+@app.route('/session/clear', methods=[GET])
+def clear_session():
+    return session_management.clear_session()
+
 
 if __name__ == '__main__':
     app.run()
