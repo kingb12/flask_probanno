@@ -532,7 +532,7 @@ def authorize_headers(session):
 
 
 def clear_session_values(session, clear_session=False):
-    make_and_unpack_request('/session/clear', GET, authorize_headers(session), params={'clear_session': clear_session})
+    make_api_request('/session/clear', GET, authorize_headers(session), params={'clear_session': clear_session})
 
 
 if __name__ == '__main__':
