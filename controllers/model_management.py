@@ -93,7 +93,6 @@ def _async_gapfill_model(job, output_id, session_id, model, universal_model_file
         model.solver = solver
         universal_model.solver = solver
         reactions = cobra_modeling.gapfill_model(model, universal_model, likelihoods)[0]
-        print reactions
         if addReactions:
             model.add_reactions([universal_model.reactions.get_by_id(r.id) for r in reactions if
                                  universal_model.reactions.has_id(r.id) and not model.reactions.has_id(

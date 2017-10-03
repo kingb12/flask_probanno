@@ -64,7 +64,6 @@ class TestProbannoMethods(unittest.TestCase):
         session = make_and_unpack_request("/session", GET, HEADERS)
         try:
             # remove any values that would have been cached
-            clear_probanno(FASTA_1)
             files = {'fasta': open('267377.fasta', 'rb')}
             data = {'fasta_id': MY_FASTA_NAME}
             # un-cached
@@ -526,7 +525,7 @@ def make_and_unpack_request(path, method, headers, params=None, files=None, data
 
 
 def authorize_headers(session):
-    auth_headers = {"session_id": session}
+    auth_headers = {"session": session}
     auth_headers.update(HEADERS)
     return auth_headers
 
