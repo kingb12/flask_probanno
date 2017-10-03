@@ -7,7 +7,7 @@
 CREATE TABLE IF NOT EXISTS Session(sid VARCHAR(60) PRIMARY KEY, logout INTEGER);
 
 -- Storing Reaction Probabilities
-CREATE TABLE IF NOT EXISTS Probs(id VARCHAR(60) PRIMARY KEY, probs BLOB);
+CREATE TABLE IF NOT EXISTS Probs(id VARCHAR(60) PRIMARY KEY, probs BLOB, name TEXT);
 CREATE TABLE IF NOT EXISTS Probanno(fasta_id VARCHAR(60), sid VARCHAR(60), probs_id VARCHAR(60),
   FOREIGN KEY (sid) REFERENCES Session(sid), FOREIGN KEY (probs_id) REFERENCES Probs(id), PRIMARY KEY (fasta_id, sid));
 
