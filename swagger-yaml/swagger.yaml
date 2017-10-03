@@ -59,7 +59,7 @@ paths:
         description: "Uniprot taxonomic identifier for target genome sequence (FASTA)"
         required: true
         type: "string"
-      - name: "session_id"
+      - name: "session"
         in: "header"
         description: "Session to associate with this job"
         required: true
@@ -89,7 +89,7 @@ paths:
         description: "Target genome sequence in FASTA format"
         required: true
         type: file
-      - name: "session_id"
+      - name: "session"
         in: "header"
         type: "string"
         description: "Session to associate with this job"
@@ -118,7 +118,7 @@ paths:
         description: "Uniprot taxonomic identifier for target genome sequence (FASTA)"
         required: true
         type: "string"
-      - name: "session_id"
+      - name: "session"
         type: "string"
         in: "header"
         description: "Session associated with the job in which they were calculated"
@@ -149,7 +149,7 @@ paths:
         description: "Uniprot taxonomic identifier for target genome sequence (FASTA)"
         required: true
         type: "string"
-      - name: "session_id"
+      - name: "session"
         type: "string"
         in: "header"
         description: "Session associated with the job in which they were calculated"
@@ -176,7 +176,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "session_id"
+      - name: "session"
         in: "header"
         type: "string"
         description: "Session associated with the job in which they were calculated"
@@ -207,7 +207,7 @@ paths:
         description: "ID for the model to be downloaded"
         required: true
         type: "string"
-      - name: "session_id"
+      - name: "session"
         in: "header"
         type: "string"
         description: "Session associated with the job in which they were calculated"
@@ -243,7 +243,7 @@ paths:
         required: true
         type: "string"
         format: "application/json"
-      - name: "session_id"
+      - name: "session"
         in: "header"
         type: "string"
         description: "Session associated with the job in which they were calculated"
@@ -279,7 +279,7 @@ paths:
         required: true
         type: "string"
         format: "application/json"
-      - name: "session_id"
+      - name: "session"
         type: "string"
         in: "header"
         description: "Session associated with the job in which they were calculated"
@@ -308,7 +308,7 @@ paths:
         description: "ID for the model to be downloaded"
         required: true
         type: "string"
-      - name: "session_id"
+      - name: "session"
         type: "string"
         in: "header"
         description: "Session associated with the job in which they were calculated"
@@ -356,7 +356,7 @@ paths:
         - "GramPositive"
         - "GramNegative"
         - "Microbial"
-      - name: "session_id"
+      - name: "session"
         in: "header"
         description: "Session associated with the job in which they were calculated"
         required: true
@@ -381,7 +381,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "session_id"
+      - name: "session"
         in: "header"
         type: "string"
         description: "Session associated with the job in which they were calculated"
@@ -411,7 +411,7 @@ paths:
         description: "UUID of the job to retrieve"
         required: true
         type: "string"
-      - name: "session_id"
+      - name: "session"
         type: "string"
         in: "header"
         description: "Session associated with the job"
@@ -435,7 +435,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "session_id"
+      - name: "session"
         in: "header"
         type: "string"
         description: "Session associated with the job"

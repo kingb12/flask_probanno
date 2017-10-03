@@ -3,7 +3,7 @@ from flask import request, abort
 from controllers.error_management import bad_request
 from models import session
 
-SESSION_ID = 'session_id'
+SESSION_ID = 'session'
 
 
 def has_session():
