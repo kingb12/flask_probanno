@@ -1,13 +1,12 @@
-import uuid
-from flask import request, abort, send_from_directory, render_template, jsonify
-from exceptions import InvalidUsage
-from redis import Redis
-from rq import Queue
-import probanno
-import session_management
-import data.database as db
-import utils
 import json
+import uuid
+from exceptions import InvalidUsage
+
+from flask import request, abort, render_template, jsonify
+
+import data.database as db
+import session_management
+from controllers.error_management import missing_argument, not_found
 
 COMPLETE = 'Complete'
 FAILURE = 'Failure'
@@ -86,12 +85,12 @@ def job_status_page(job_id, success_url):
 def get_job():
     session = session_management.get_session_id()
     if session is None:
-        abort(400)
+        return session_management.bad_or_missing_session()
     if JOB_ID not in request.args:
-        abort(400)
+        return missing_argument(JOB_ID)
     job = retrieve_job(request.args[JOB_ID])
     if job is None:
-        abort(404)
+        return not_found("Job not found")
     return jsonify(job.to_dict_dto())
 
 
@@ -102,7 +101,7 @@ def retrieve_job(job_id):
 def list_jobs():
     session = session_management.get_session_id()
     if session is None:
-        abort(400)
+        return session_management.bad_or_missing_session()
     jobs = [Job.from_db_tuple(job).to_dict_dto() for job in db.list_jobs(session)]
     return jsonify(jobs)
 

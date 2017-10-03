@@ -8,6 +8,7 @@ import session_management
 import json
 
 import utils
+from controllers.error_management import missing_argument, bad_request, not_found
 from job import Job, job_status_page, GAPFILL_COMPLETE_URL, retrieve_job
 from rq import Queue
 from redis import Redis
@@ -28,9 +29,9 @@ OUTPUT_ID = 'output_id'
 def load_model(app):
     session = session_management.get_session_id()
     if session is None:
-        abort(400)
+        return session_management.bad_or_missing_session()
     if 'file' not in request.files:
-        abort(400)
+        return missing_argument('file')
     file = request.files['file']
     filename = utils.upload_file(app, file, ALLOWED_EXTENSIONS)
     # load model w/ cobra
@@ -38,10 +39,10 @@ def load_model(app):
     try:
         model = cobra_modeling.from_json_file(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     except BaseException as e:
-        abort(400)
+        return bad_request("Invalid CobraPy Model. Not in proper cobra.io.json deserializable format")
     os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     if MODEL_ID not in request.form:
-        abort(400)
+        return missing_argument(MODEL_ID)
     model_id = request.form[MODEL_ID]
     if db.find_model(session, model_id) is not None:
         db.delete_model(session, model_id)
@@ -60,23 +61,23 @@ def run_fba():
 def gapfill_model(app):
     session = session_management.get_session_id()
     if session is None:
-        abort(400)
+        return session_management.bad_or_missing_session()
     if MODEL_ID not in request.args:
-        abort(400)
+        return missing_argument(MODEL_ID)
     if OUTPUT_ID not in request.args:
-        abort(400)
+        return missing_argument(OUTPUT_ID)
     fasta_id = request.args[FASTA_ID] if FASTA_ID in request.args else None
     if fasta_id is None or fasta_id == '':
-        abort(400)
+        return missing_argument(FASTA_ID)
     model_id = request.args['model_id']
     session_id = session_management.get_session_id()
     likelihoods = db.retrieve_probanno(session, fasta_id)
     if likelihoods is None:
-        abort(404)
+        return not_found(fasta_id + " not found")
     addReactions = True  # Could make an argument for more customization
     model = _retrieve_model(session_id, model_id)
     if model is None:
-        abort(404)
+        return not_found(model_id + " not found")
     template = request.args['template'] if 'template' in request.args else MICROBIAL
     universal_model_file = app.config['UNIVERSAL_MODELS'] + template + '.json'
     job = Job(session_id, GAPFILL_MODEL_JOB, model_id)
@@ -115,7 +116,7 @@ def list_models():
     # session_id = request.args['sid']
     session_id = session_management.get_session_id()
     if session_id is None:
-        abort(400)
+        return session_management.bad_or_missing_session()
     return jsonify(db.list_models(session_id))
 
 
@@ -137,13 +138,13 @@ def model_complete_view(model_id=None):
 def download_model(app):
     session = session_management.get_session_id()
     if session is None:
-        abort(400)
+        return session_management.bad_or_missing_session()
     if MODEL_ID not in request.args:
-        abort(400)
+        return missing_argument(MODEL_ID)
     model_id = request.args[MODEL_ID]
     model = db.find_model(session, model_id)
     if model is None:
-        abort(404)
+        return not_found(model_id + " not found")
     filename = str(model_id) + '.json'
     with open(app.config['UPLOAD_FOLDER'] + filename, 'w') as f:
         f.write(json.dumps(model[-1]))
@@ -153,10 +154,10 @@ def download_model(app):
 def get_model(app):
     session = session_management.get_session_id()
     if session is None:
-        abort(400)
+        return session_management.bad_or_missing_session()
     if MODEL_ID not in request.args:
-        abort(400)
+        return missing_argument(MODEL_ID)
     model = db.find_model(session, request.args[MODEL_ID])
     if model is None:
-        abort(404)
+        return not_found(request.args[MODEL_ID] + " not found")
     return Response(model[-1], mimetype='application/json')

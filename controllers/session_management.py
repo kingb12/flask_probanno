@@ -1,4 +1,6 @@
 from flask import request, abort
+
+from controllers.error_management import bad_request
 from models import session
 
 SESSION_ID = 'session_id'
@@ -33,5 +35,9 @@ def prepare_new_session():
 def clear_session():
     sesh= get_session_id()
     if sesh is None:
-        abort(400)
+        return bad_or_missing_session()
     return session.clear_session(sesh, request.args['clear_session'] if 'clear_session' in request.args else None)
+
+
+def bad_or_missing_session():
+    return bad_request("No session or invalid session supplied")

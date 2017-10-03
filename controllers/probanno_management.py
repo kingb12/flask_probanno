@@ -10,6 +10,8 @@ import data.database as db
 import utils
 import json
 import exceptions
+
+from controllers.error_management import missing_argument, not_found
 from job import Job, job_status_page, PROBANNO_COMPLETE_URL, retrieve_job, COMPLETE
 
 # TODO: (PW-10) Make this relative reference cleaner with a config file
@@ -34,7 +36,7 @@ probanno_queue = Queue(connection=Redis())
 def get_reaction_probabilities(app, fasta_id=None, fasta_file=None):
     session = session_management.get_session_id()
     if session is None:
-        abort(400)
+        return session_management.bad_or_missing_session()
     template = None
     if request.method == GET:
         fasta_id = request.args[FASTA_ID] if fasta_id is None else fasta_id
@@ -50,16 +52,16 @@ def get_reaction_probabilities(app, fasta_id=None, fasta_file=None):
         try:
             fasta_file = get_fasta_by_id(app, fasta_id) if fasta_file is None else fasta_file
         except probanno.FastaNotFoundError:
-            return abort(404)
+            return not_found(fasta_id + " not found")
         template = request.args[TEMPLATE] if TEMPLATE in request.args else DEFAULT_TEMPLATE
     if request.method == PUT:
         fasta_id = request.form[FASTA_ID] if fasta_id is None else fasta_id
         if fasta_id is None:
-            abort(400)
+            return missing_argument(FASTA_ID)
         if FASTA in request.files:
             fasta_file = app.config['UPLOAD_FOLDER'] + utils.upload_file(app, request.files[FASTA])
         else:
-            abort(400)
+            return missing_argument(FASTA_ID)
         template = request.form[TEMPLATE] if TEMPLATE in request.form else DEFAULT_TEMPLATE
     template_file = TEMPLATE_FILES[template] if template in TEMPLATE_FILES else TEMPLATE_FILES[DEFAULT_TEMPLATE]
     gen_id = request.args[FASTA_ID] if FASTA_ID in request.args and request.args[FASTA_ID] is not None else fasta_file
@@ -103,7 +105,7 @@ def get_fasta_by_id(app, fasta_id):
 def list_probannos():
     session = session_management.get_session_id()
     if session is None:
-        abort(400)
+        return session_management.bad_or_missing_session()
     probs = [{'fasta_id': p[0], 'name': p[1]} for p in db.list_probannos(session)]
     return jsonify(probs)
 
@@ -111,10 +113,10 @@ def list_probannos():
 def download_probanno(app):
     session = session_management.get_session_id()
     if session is None:
-        abort(400)
+        return session_management.bad_or_missing_session()
     fasta_id = request.args[FASTA_ID] if FASTA_ID in request.args else None
     if fasta_id is None or fasta_id == '':
-        abort(400)
+        return missing_argument(FASTA_ID)
     likelihoods = db.retrieve_probanno(session, fasta_id)
     if likelihoods is None:
         abort(404)
@@ -135,13 +137,13 @@ def probanno_complete_view(fasta_id=None):
 def get_probanno():
     session = session_management.get_session_id()
     if session is None:
-        abort(400)
+        return session_management.bad_or_missing_session()
     fasta_id = request.args[FASTA_ID] if FASTA_ID in request.args else None
     if fasta_id is None or fasta_id == '':
-        abort(400)
+        return missing_argument(FASTA_ID)
     likelihoods = db.retrieve_probanno(session, fasta_id)
     if likelihoods is None:
-        abort(404)
+        return not_found(fasta_id + " not found")
     return Response(likelihoods[-2], mimetype='application/json')
 
 
