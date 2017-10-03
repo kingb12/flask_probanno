@@ -60,6 +60,7 @@ def probanno_complete():
     # Displays a page indicating a probanno job has completed, and provides a download link
     return probanno_management.probanno_complete_view()
 
+
 @app.route('/view/model/complete')
 def model_complete():
     # Displays a page indicating a gapfill job has completed, and provides a download link
@@ -115,11 +116,6 @@ def run_fba():
     return model_management.run_fba()
 
 
-@app.route('/api/model/addreactions')
-def add_reactions():
-    return "Not Implemented"
-
-
 @app.route('/hello')
 def hello():
     return 'hello'
@@ -159,6 +155,7 @@ def check_job():
 def list_jobs():
     return job.list_jobs()
 
+
 @app.route('/spec')
 def spec():
     # Renders the template indicating the API specification. Make sure the file is up to date!
@@ -168,29 +165,10 @@ def spec():
     swag['info']['title'] = "Probanno API"
     return jsonify(swag)
 
+
 @app.route('/api/job', methods=[GET])
 def get_job():
     return job.get_job()
-
-
-@app.route('/view/probanno/complete')
-def probanno_complete():
-    return probanno_management.probanno_complete_view()
-
-
-@app.route('/view/model/complete')
-def model_complete():
-    return model_management.model_complete_view()
-
-
-@app.route('/aboutProbAnno.html')
-def about():
-    return render_template("aboutProbAnno.html")
-
-
-@app.route('/view/job/status')
-def job_status():
-    return job.view_status()
 
 
 if __name__ == '__main__':
