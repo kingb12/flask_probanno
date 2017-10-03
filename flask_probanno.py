@@ -14,7 +14,7 @@ PUT = 'PUT'
 POST = 'POST'
 GET = 'GET'
 
-DATABASE = '/data/db/probannoweb.db'
+DATABASE = '/data/probannoweb.db'
 UPLOAD_FOLDER = '/tmp/'
 MODEL_TEMPLATES_FOLDER = '/probannoenv/src/probanno/templates/'
 UNIVERSAL_MODELS_FOLDER = '/data/universal/'

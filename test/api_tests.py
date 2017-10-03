@@ -3,13 +3,12 @@ import unittest
 import json
 import uuid
 
-from controllers.job import Job
 from flask_probanno import GET, POST, PUT
 from data import database as db
 from controllers.probanno_management import CALCULATE_PROBANNO_JOB
 from controllers.job import COMPLETE
 
-BASE_URL = "http://127.0.0.1:5000/api"
+BASE_URL = "http://probanno.systemsbiology.net/api"
 HEADERS = {'cache-control': 'no-cache'}
 FASTA_1 = '267377'
 CACHED_FASTA = '243232'
