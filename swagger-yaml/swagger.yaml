@@ -35,10 +35,12 @@ paths:
       tags:
       - "session"
       summary: "Get a new session"
-      description: "Get a new session token, a UUID associated with all actions for this session. This is in lieu of more sophisticated authorization schemes."
+      description: "Get a new session token, a UUID associated with all actions for\
+        \ this session. This is in lieu of more sophisticated authorization schemes."
       operationId: "getSession"
       produces:
       - "application/json"
+      parameters: []
       responses:
         200:
           description: "successful operation"
@@ -48,7 +50,7 @@ paths:
     get:
       tags:
       - "probanno"
-      summary: Calculate Reaction Likelihoods
+      summary: "Calculate Reaction Likelihoods"
       description: "Calculate reaction likelihoods by Uniprot taxonomic identifier"
       operationId: "calculateLikelihoodsGet"
       produces:
@@ -59,7 +61,7 @@ paths:
         description: "Uniprot taxonomic identifier for target genome sequence (FASTA)"
         required: true
         type: "string"
-      - name: "session_id"
+      - name: "session"
         in: "header"
         description: "Session to associate with this job"
         required: true
@@ -88,12 +90,12 @@ paths:
         in: "formData"
         description: "Target genome sequence in FASTA format"
         required: true
-        type: file
-      - name: "session_id"
+        type: "file"
+      - name: "session"
         in: "header"
-        type: "string"
         description: "Session to associate with this job"
         required: true
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -107,7 +109,7 @@ paths:
     get:
       tags:
       - "probanno"
-      summary: Retrieve reaction likelihoods
+      summary: "Retrieve reaction likelihoods"
       description: "Retrieve reaction likelihoods"
       operationId: "getLikelihoods"
       produces:
@@ -118,11 +120,11 @@ paths:
         description: "Uniprot taxonomic identifier for target genome sequence (FASTA)"
         required: true
         type: "string"
-      - name: "session_id"
-        type: "string"
+      - name: "session"
         in: "header"
         description: "Session associated with the job in which they were calculated"
         required: true
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -138,7 +140,7 @@ paths:
     get:
       tags:
       - "probanno"
-      summary: Download reaction likelihoods
+      summary: "Download reaction likelihoods"
       description: "Download reaction likelihoods"
       operationId: "downloadReactions"
       produces:
@@ -149,11 +151,11 @@ paths:
         description: "Uniprot taxonomic identifier for target genome sequence (FASTA)"
         required: true
         type: "string"
-      - name: "session_id"
-        type: "string"
+      - name: "session"
         in: "header"
         description: "Session associated with the job in which they were calculated"
         required: true
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -170,22 +172,23 @@ paths:
       tags:
       - "probanno"
       summary: "List calculated reaction likelihoods"
-      description: "List reaction likelihoods calculated within this session. Only includes likelihoods associated with
-        COMPLETE jobs, not failures or in progress jobs."
+      description: "List reaction likelihoods calculated within this session. Only\
+        \ includes likelihoods associated with COMPLETE jobs, not failures or in progress\
+        \ jobs."
       operationId: "listLikelihoods"
       produces:
       - "application/json"
       parameters:
-      - name: "session_id"
+      - name: "session"
         in: "header"
-        type: "string"
         description: "Session associated with the job in which they were calculated"
         required: true
+        type: "string"
       responses:
         200:
           description: "successful operation"
           schema:
-            type: array
+            type: "array"
             items:
               $ref: "#/definitions/LikelihoodSummary"
         400:
@@ -207,11 +210,11 @@ paths:
         description: "ID for the model to be downloaded"
         required: true
         type: "string"
-      - name: "session_id"
+      - name: "session"
         in: "header"
-        type: "string"
         description: "Session associated with the job in which they were calculated"
         required: true
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -243,11 +246,11 @@ paths:
         required: true
         type: "string"
         format: "application/json"
-      - name: "session_id"
+      - name: "session"
         in: "header"
-        type: "string"
         description: "Session associated with the job in which they were calculated"
         required: true
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -279,11 +282,11 @@ paths:
         required: true
         type: "string"
         format: "application/json"
-      - name: "session_id"
-        type: "string"
+      - name: "session"
         in: "header"
         description: "Session associated with the job in which they were calculated"
         required: true
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -308,11 +311,11 @@ paths:
         description: "ID for the model to be downloaded"
         required: true
         type: "string"
-      - name: "session_id"
-        type: "string"
+      - name: "session"
         in: "header"
         description: "Session associated with the job in which they were calculated"
         required: true
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -349,14 +352,14 @@ paths:
         type: "string"
       - name: "template"
         in: "query"
-        type: "string"
         description: "Template model to inform gap-filling"
         required: false
+        type: "string"
         enum:
         - "GramPositive"
         - "GramNegative"
         - "Microbial"
-      - name: "session_id"
+      - name: "session"
         in: "header"
         description: "Session associated with the job in which they were calculated"
         required: true
@@ -381,11 +384,11 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "session_id"
+      - name: "session"
         in: "header"
-        type: "string"
         description: "Session associated with the job in which they were calculated"
         required: true
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -400,7 +403,7 @@ paths:
     get:
       tags:
       - "job"
-      summary: Retrieve job status
+      summary: "Retrieve job status"
       description: "Retrieve job status object"
       operationId: "getJob"
       produces:
@@ -411,11 +414,11 @@ paths:
         description: "UUID of the job to retrieve"
         required: true
         type: "string"
-      - name: "session_id"
-        type: "string"
+      - name: "session"
         in: "header"
         description: "Session associated with the job"
         required: true
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -435,11 +438,11 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "session_id"
+      - name: "session"
         in: "header"
-        type: "string"
         description: "Session associated with the job"
         required: true
+        type: "string"
       responses:
         200:
           description: "successful operation"
@@ -457,24 +460,15 @@ definitions:
         type: "string"
         format: "uuid"
         example: "a70a6344-3c55-48fa-8b60-db71858e810b"
-      job:
-        enum:
-        - "calculate_probanno"
-        - "gapfill_model"
       target:
         type: "string"
         example: "my_model"
-        description: "ID of the object targeted by the job (model for gap-filling, fasta_id for probanno)"
-      status:
-        enum:
-        - "Complete"
-        - "Not Started"
-        - "Failure"
-        - "Running"
+        description: "ID of the object targeted by the job (model for gap-filling,\
+          \ fasta_id for probanno)"
   Session:
     type: "string"
-    description: "Unique session identifier"
     format: "uuid"
+    description: "Unique session identifier"
     example: "a70a6344-3c55-48fa-8b60-db71858e810b"
   ReactionLikelihood:
     type: "object"
@@ -487,7 +481,9 @@ definitions:
         example: "HASCOMPLEXES"
       gpr:
         type: "string"
-        example: "sp|Q58092|TKTC_METJA Putative transketolase C-terminal section OS=Methanocaldococcus jannaschii (strain ATCC 43067 / DSM 2661 / JAL-1 / JCM 10045 / NBRC 100440) GN=MJ0679 PE=5 SV=1"
+        example: "sp|Q58092|TKTC_METJA Putative transketolase C-terminal section OS=Methanocaldococcus\
+          \ jannaschii (strain ATCC 43067 / DSM 2661 / JAL-1 / JCM 10045 / NBRC 100440)\
+          \ GN=MJ0679 PE=5 SV=1"
       probability:
         type: "number"
         example: 0.88585
