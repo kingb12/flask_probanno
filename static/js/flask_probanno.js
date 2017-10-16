@@ -4,10 +4,10 @@
 
 // ============== STRING CONSTANTS (e.g. root URL, API links, etc.) ====================================================
 
-const ROOT_URL = "http://probannoweb.systemsbiology.net";
-const LIST_MODELS_ENDPOINT = "/api/list/model";
-const LIST_PROBANNOS_ENDPOINT = "/api/list/probanno";
-const LIST_JOBS_ENDPOINT = "/api/list/job";
+const ROOT_URL = "http://127.0.0.1:5000";
+const LIST_MODELS_ENDPOINT = "/api/model/list";
+const LIST_PROBANNOS_ENDPOINT = "/api/probanno/list";
+const LIST_JOBS_ENDPOINT = "/api/job/list";
 const GAPFILL_MODEL_ENDPOINT = "/gapfillmodel";
 const DOWNLOAD_PROBANNO_ENDPOINT = "/api/io/downloadprobanno";
 const DOWNLOAD_MODEL_ENDPOINT = "/api/io/downloadmodel";
@@ -70,9 +70,9 @@ function listProbannos(table_tbody_id) {
         var tableArray = [];
         for (i = 0; i < args.data.length; i++) {
             var download_url = ROOT_URL + DOWNLOAD_PROBANNO_ENDPOINT;
-            tableArray.push([args.data[i],
+            tableArray.push([args.data[i].fasta_id, args.data[i].name,
                 '<form method = "get" action=' + download_url + '>' +
-                    '<input name="fasta_id" type="hidden" value=' + args.data[i] + ' />' +
+                    '<input name="fasta_id" type="hidden" value=' + args.data[i].fasta_id+ ' />' +
                     '<b><input type="submit" value="Download"/></b></form>']);
         }
         populateTable(args.table_tbody_id, tableArray);
@@ -95,7 +95,7 @@ function listJobs(table_tbody_id, jobs_table_div) {
             return;
         }
         for (i = 0; i < args.data.length; i++) {
-            var status = args.data[i][4];
+            var status = args.data[i].status;
             var html;
             var watch_url = ROOT_URL + VIEW_JOB_ENDPOINT;
             var download_url;
@@ -103,12 +103,12 @@ function listJobs(table_tbody_id, jobs_table_div) {
             var suffix = '';
             if (status !== 'Complete' && status !== 'Failure') {
                 html =  '<form method = "get" action=' + watch_url + '>' +
-                            '<input name="job_id" type="hidden" value=' + args.data[i][0] + ' />' +
+                            '<input name="job_id" type="hidden" value=' + args.data[i].jid + ' />' +
                             '<b><input type="submit" value="Watch Status"/></b>' +
                         '</form>'
             } else if (status === 'Failure') {
                 var retry_url;
-                if (args.data[i][2] == 'calculate_probanno') {
+                if (args.data[i].job == 'calculate_probanno') {
                     retry_url = ROOT_URL + RUN_PROBANNO_ENDPOINT;
                     result_type = 'fasta_id';
                 } else {
@@ -116,11 +116,11 @@ function listJobs(table_tbody_id, jobs_table_div) {
                    result_type = 'model_id';
                 }
                 html =  '<form method = "get" action=' + retry_url + '>' +
-                            '<input name=' + result_type + ' type="hidden" value=' + args.data[i][3] + ' />' +
+                            '<input name=' + result_type + ' type="hidden" value=' + args.data[i].target + ' />' +
                             '<b><input type="submit" value="Retry"/></b>' +
                         '</form>'
             } else {
-                if (args.data[i][2] === 'calculate_probanno') {
+                if (args.data[i].job === 'calculate_probanno') {
                     download_url = ROOT_URL + DOWNLOAD_PROBANNO_ENDPOINT;
                     result_type = "fasta_id";
                 } else {
@@ -129,12 +129,12 @@ function listJobs(table_tbody_id, jobs_table_div) {
                     suffix = '_gapfilled';
                 }
                 html =  '<form method = "get" action=' + download_url + '>' +
-                    '<input name=' + result_type + ' type="hidden" value=' + args.data[i][3] + suffix + ' />' +
+                    '<input name=' + result_type + ' type="hidden" value=' + args.data[i].target + suffix + ' />' +
                     '<b><input type="submit" value="Download Result"/></b>' +
                     '</form>';
             }
 
-            tableArray.push([args.data[i][3], args.data[i][2], args.data[i][4], html]);
+            tableArray.push([args.data[i].target, args.data[i].job, args.data[i].status, html]);
         }
         populateTable(args.table_tbody_id, tableArray);
     }
@@ -146,6 +146,7 @@ function getJsonFromRequest(method, url, onResponse, args) {
     var xhr = new XMLHttpRequest();
 
     xhr.open(method, url, true);
+    xhr.setRequestHeader("session", getCookie("session_id"));
     xhr.send(null);
     xhr.onreadystatechange = processRequest;
 
@@ -199,10 +200,10 @@ function selectProbannos(selectBody) {
         var tableArray = [];
         for (i = 0; i < args.data.length; i++) {
             var selectString = '';
-            if (getParameterByName('probanno_id') == args.data[i]) {
+            if (getParameterByName('probanno_id') == args.data[i].fasta_id) {
                 selectString = 'selected="selected"';
             }
-            tableArray.push('<option value="'+ args.data[i] + '" ' + selectString + ' >' + args.data[i] + '</option>');
+            tableArray.push('<option value="'+ args.data[i].fasta_id + '" ' + selectString + ' >' + args.data[i].fasta_id + ": " + args.data[i].name + '</option>');
         }
         populateSelect(args.selectBody, tableArray);
     }

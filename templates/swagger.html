@@ -1,0 +1,1085 @@
+<!doctype html>
+<html>
+  <head>
+    <title>ProbannoWebAPI</title>
+    <style type="text/css">
+      body {
+	font-family: Trebuchet MS, sans-serif;
+	font-size: 15px;
+	color: #444;
+	margin-right: 24px;
+}
+
+h1	{
+	font-size: 25px;
+}
+h2	{
+	font-size: 20px;
+}
+h3	{
+	font-size: 16px;
+	font-weight: bold;
+}
+hr	{
+	height: 1px;
+	border: 0;
+	color: #ddd;
+	background-color: #ddd;
+}
+
+.app-desc {
+  clear: both;
+  margin-left: 20px;
+}
+.param-name {
+  width: 100%;
+}
+.license-info {
+  margin-left: 20px;
+}
+
+.license-url {
+  margin-left: 20px;
+}
+
+.model {
+  margin: 0 0 0px 20px;
+}
+
+.method {
+  margin-left: 20px;
+}
+
+.method-notes	{
+	margin: 10px 0 20px 0;
+	font-size: 90%;
+	color: #555;
+}
+
+pre {
+  padding: 10px;
+  margin-bottom: 2px;
+}
+
+.http-method {
+ text-transform: uppercase;
+}
+
+pre.get {
+  background-color: #0f6ab4;
+}
+
+pre.post {
+  background-color: #10a54a;
+}
+
+pre.put {
+  background-color: #c5862b;
+}
+
+pre.delete {
+  background-color: #a41e22;
+}
+
+.huge	{
+	color: #fff;
+}
+
+pre.example {
+  background-color: #f3f3f3;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+code {
+  white-space: pre;
+}
+
+.nickname {
+  font-weight: bold;
+}
+
+.method-path {
+  font-size: 1.5em;
+  background-color: #0f6ab4;
+}
+
+.up {
+  float:right;
+}
+
+.parameter {
+  width: 500px;
+}
+
+.param {
+  width: 500px;
+  padding: 10px 0 0 20px;
+  font-weight: bold;
+}
+
+.param-desc {
+  width: 700px;
+  padding: 0 0 0 20px;
+  color: #777;
+}
+
+.param-type {
+  font-style: italic;
+}
+
+.param-enum-header {
+width: 700px;
+padding: 0 0 0 60px;
+color: #777;
+font-weight: bold;
+}
+
+.param-enum {
+width: 700px;
+padding: 0 0 0 80px;
+color: #777;
+font-style: italic;
+}
+
+.field-label {
+  padding: 0;
+  margin: 0;
+  clear: both;
+}
+
+.field-items	{
+	padding: 0 0 15px 0;
+	margin-bottom: 15px;
+}
+
+.return-type {
+  clear: both;
+  padding-bottom: 10px;
+}
+
+.param-header {
+  font-weight: bold;
+}
+
+.method-tags {
+  text-align: right;
+}
+
+.method-tag {
+  background: none repeat scroll 0% 0% #24A600;
+  border-radius: 3px;
+  padding: 2px 10px;
+  margin: 2px;
+  color: #FFF;
+  display: inline-block;
+  text-decoration: none;
+}
+
+    </style>
+  </head>
+  <body>
+  <h1>ProbannoWebAPI</h1>
+    <div class="app-desc">This is the documentation for the ProbannoWeb API, available for academic public use at
+<a href="http://probannoweb.systemsbiology.net/api">http://probannoweb.systemsbiology.net/api</a></div>
+    <div class="app-desc">More information: <a href=""></a></div>
+    <div class="app-desc">Contact Info: <a href="kingb12@cs.washington.edu">kingb12@cs.washington.edu</a></div>
+    <div class="app-desc">Version: 1.0.0</div>
+    <div class="app-desc">BasePath:/kingb12/ProbannoWeb/1.0.0</div>
+    <div class="license-info">Apache 2.0</div>
+    <div class="license-url">http://www.apache.org/licenses/LICENSE-2.0.html</div>
+  <h2>Access</h2>
+
+  <h2><a name="__Methods">Methods</a></h2>
+  [ Jump to <a href="#__Models">Models</a> ]
+
+  <h3>Table of Contents </h3>
+  <div class="method-summary"></div>
+  <h4><a href="#Job">Job</a></h4>
+  <ul>
+  <li><a href="#getJob"><code><span class="http-method">get</span> /job</code></a></li>
+  <li><a href="#listJob"><code><span class="http-method">get</span> /job/list</code></a></li>
+  </ul>
+  <h4><a href="#Model">Model</a></h4>
+  <ul>
+  <li><a href="#createModel"><code><span class="http-method">post</span> /model</code></a></li>
+  <li><a href="#downloadModel"><code><span class="http-method">get</span> /model/download</code></a></li>
+  <li><a href="#gapfillModel"><code><span class="http-method">get</span> /model/gapfill</code></a></li>
+  <li><a href="#getModel"><code><span class="http-method">get</span> /model</code></a></li>
+  <li><a href="#listModel"><code><span class="http-method">get</span> /model/list</code></a></li>
+  <li><a href="#updateModel"><code><span class="http-method">put</span> /model</code></a></li>
+  </ul>
+  <h4><a href="#Probanno">Probanno</a></h4>
+  <ul>
+  <li><a href="#calculateLikelihoodsGet"><code><span class="http-method">get</span> /probanno/calculate</code></a></li>
+  <li><a href="#calculateLikelihoodsPut"><code><span class="http-method">put</span> /probanno/calculate</code></a></li>
+  <li><a href="#downloadReactions"><code><span class="http-method">get</span> /probanno/download</code></a></li>
+  <li><a href="#getLikelihoods"><code><span class="http-method">get</span> /probanno</code></a></li>
+  <li><a href="#listLikelihoods"><code><span class="http-method">get</span> /probanno/list</code></a></li>
+  </ul>
+  <h4><a href="#Session">Session</a></h4>
+  <ul>
+  <li><a href="#getSession"><code><span class="http-method">get</span> /session</code></a></li>
+  </ul>
+
+  <h1><a name="Job">Job</a></h1>
+  <div class="method"><a name="getJob"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /job</code></pre></div>
+    <div class="method-summary">Retrieve job status (<span class="nickname">getJob</span>)</div>
+    <div class="method-notes">Retrieve job status object</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">job_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; UUID of the job to retrieve </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Job">Job</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "jid" : "a70a6344-3c55-48fa-8b60-db71858e810b",
+  "job" : "calculate_probanno",
+  "target" : "my_model",
+  "status" : "Complete"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#Job">Job</a>
+    <h4 class="field-label">400</h4>
+    Bad or missing session
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Job not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="listJob"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /job/list</code></pre></div>
+    <div class="method-summary">Retrieve all job statuses (<span class="nickname">listJob</span>)</div>
+    <div class="method-notes">Retrieve all job status objects</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Job">Job</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "jid" : "a70a6344-3c55-48fa-8b60-db71858e810b",
+  "job" : "calculate_probanno",
+  "target" : "my_model",
+  "status" : "Complete"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        
+    <h4 class="field-label">400</h4>
+    Bad or missing session
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Model">Model</a></h1>
+  <div class="method"><a name="createModel"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /model</code></pre></div>
+    <div class="method-summary">Upload metabolic model (<span class="nickname">createModel</span>)</div>
+    <div class="method-notes">Upload metabolic model as JSON</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="heaader">Content-Type</span> request header:
+    <ul>
+      <li><code>multipart/form-data</code></li>
+    </ul>
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">model_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; ID for the model to be uploaded </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Form parameters</h3>
+    <div class="field-items">
+      <div class="param">file (required)</div>
+
+      <div class="param-desc"><span class="param-type">Form Parameter</span> &mdash; Model to be uploaded format: application/json</div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Model">Model</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{ }</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#Model">Model</a>
+    <h4 class="field-label">400</h4>
+    No session, bad session, or missing arguments
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Model not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="downloadModel"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /model/download</code></pre></div>
+    <div class="method-summary">Retrieve metabolic model as file (<span class="nickname">downloadModel</span>)</div>
+    <div class="method-notes">Retrieve metabolic model as JSON file</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">model_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; ID for the model to be downloaded </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Model">Model</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{ }</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#Model">Model</a>
+    <h4 class="field-label">400</h4>
+    No session, bad session, or missing arguments
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Model not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="gapfillModel"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /model/gapfill</code></pre></div>
+    <div class="method-summary">probabilistically gap-fill a metabolic model (<span class="nickname">gapfillModel</span>)</div>
+    <div class="method-notes">Run a probabilistic gap-filling with a model</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">model_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; metabolic model to gapfill </div><div class="param">output_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; output ID for the gap-filled metabolic model </div><div class="param">fasta_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; reaction likelihoods ID to inform gap-filling </div><div class="param">template (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Template model to inform gap-filling </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Job">Job</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "jid" : "a70a6344-3c55-48fa-8b60-db71858e810b",
+  "job" : "calculate_probanno",
+  "target" : "my_model",
+  "status" : "Complete"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#Job">Job</a>
+    <h4 class="field-label">400</h4>
+    No session, bad session, or missing arguments
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Reaction likelihoods or model not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getModel"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /model</code></pre></div>
+    <div class="method-summary">Retrieve metabolic model (<span class="nickname">getModel</span>)</div>
+    <div class="method-notes">Retrieve metabolic model as JSON</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">model_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; ID for the model to be downloaded </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Model">Model</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{ }</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#Model">Model</a>
+    <h4 class="field-label">400</h4>
+    No session, bad session, or missing arguments
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Model not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="listModel"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /model/list</code></pre></div>
+    <div class="method-summary">List metabolic models (<span class="nickname">listModel</span>)</div>
+    <div class="method-notes">List metabolic models associated with the session</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      
+      array[String]
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ "aeiou" ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        
+    <h4 class="field-label">400</h4>
+    No session or bad session
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="updateModel"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /model</code></pre></div>
+    <div class="method-summary">Upload metabolic model (<span class="nickname">updateModel</span>)</div>
+    <div class="method-notes">Upload metabolic model as JSON</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="heaader">Content-Type</span> request header:
+    <ul>
+      <li><code>multipart/form-data</code></li>
+    </ul>
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">model_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; ID for the model to be uploaded </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Form parameters</h3>
+    <div class="field-items">
+      <div class="param">file (required)</div>
+
+      <div class="param-desc"><span class="param-type">Form Parameter</span> &mdash; Model to be uploaded format: application/json</div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Model">Model</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{ }</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#Model">Model</a>
+    <h4 class="field-label">400</h4>
+    No session, bad session, or missing arguments
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Model not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Probanno">Probanno</a></h1>
+  <div class="method"><a name="calculateLikelihoodsGet"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /probanno/calculate</code></pre></div>
+    <div class="method-summary">Calculate Reaction Likelihoods (<span class="nickname">calculateLikelihoodsGet</span>)</div>
+    <div class="method-notes">Calculate reaction likelihoods by Uniprot taxonomic identifier</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">fasta_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Uniprot taxonomic identifier for target genome sequence (FASTA) </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Job">Job</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "jid" : "a70a6344-3c55-48fa-8b60-db71858e810b",
+  "job" : "calculate_probanno",
+  "target" : "my_model",
+  "status" : "Complete"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#Job">Job</a>
+    <h4 class="field-label">400</h4>
+    Bad or missing session
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    FASTA not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="calculateLikelihoodsPut"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /probanno/calculate</code></pre></div>
+    <div class="method-summary">Calculate reaction likelihoods (<span class="nickname">calculateLikelihoodsPut</span>)</div>
+    <div class="method-notes">Calculate reaction likelihoods by FASTA file</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="heaader">Content-Type</span> request header:
+    <ul>
+      <li><code>multipart/form-data</code></li>
+    </ul>
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Form parameters</h3>
+    <div class="field-items">
+      <div class="param">fasta (required)</div>
+
+      <div class="param-desc"><span class="param-type">Form Parameter</span> &mdash; Target genome sequence in FASTA format </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Job">Job</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "jid" : "a70a6344-3c55-48fa-8b60-db71858e810b",
+  "job" : "calculate_probanno",
+  "target" : "my_model",
+  "status" : "Complete"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#Job">Job</a>
+    <h4 class="field-label">400</h4>
+    Bad or missing session
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    FASTA not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="downloadReactions"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /probanno/download</code></pre></div>
+    <div class="method-summary">Download reaction likelihoods (<span class="nickname">downloadReactions</span>)</div>
+    <div class="method-notes">Download reaction likelihoods</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">fasta_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Uniprot taxonomic identifier for target genome sequence (FASTA) </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#ReactionLikelihood">ReactionLikelihood</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: </div>
+    <pre class="example"><code></code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>text/plain</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        
+    <h4 class="field-label">400</h4>
+    Bad or missing session
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    FASTA not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getLikelihoods"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /probanno</code></pre></div>
+    <div class="method-summary">Retrieve reaction likelihoods (<span class="nickname">getLikelihoods</span>)</div>
+    <div class="method-notes">Retrieve reaction likelihoods</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">fasta_id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Uniprot taxonomic identifier for target genome sequence (FASTA) </div>
+    </div>  <!-- field-items -->
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#ReactionLikelihood">ReactionLikelihood</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "reaction" : "rxn00594_c",
+  "probability" : 0.88585,
+  "gpr" : "sp|Q58092|TKTC_METJA Putative transketolase C-terminal section OS=Methanocaldococcus jannaschii (strain ATCC 43067 / DSM 2661 / JAL-1 / JCM 10045 / NBRC 100440) GN=MJ0679 PE=5 SV=1",
+  "type" : "HASCOMPLEXES",
+  "complexes" : [ {
+    "probability" : 0.55,
+    "complex" : "cpx00466",
+    "type" : "CPLX_PARTIAL_1_of_2"
+  } ]
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        
+    <h4 class="field-label">400</h4>
+    Bad or missing session
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    FASTA not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="listLikelihoods"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /probanno/list</code></pre></div>
+    <div class="method-summary">List calculated reaction likelihoods (<span class="nickname">listLikelihoods</span>)</div>
+    <div class="method-notes">List reaction likelihoods calculated within this session. Only includes likelihoods associated with COMPLETE jobs, not failures or in progress jobs.</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#LikelihoodSummary">LikelihoodSummary</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "fasta_id" : "267377",
+  "name" : "Methanococcus maripaludis S2"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        
+    <h4 class="field-label">400</h4>
+    Bad or missing session
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    FASTA not found
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Session">Session</a></h1>
+  <div class="method"><a name="getSession"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /session</code></pre></div>
+    <div class="method-summary">Get a new session (<span class="nickname">getSession</span>)</div>
+    <div class="method-notes">Get a new session token, a UUID associated with all actions for this session. This is in lieu of more sophisticated authorization schemes.</div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Session">Session</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>"\"a70a6344-3c55-48fa-8b60-db71858e810b\""</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="heaader">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    successful operation
+        <a href="#Session">Session</a>
+  </div> <!-- method -->
+  <hr/>
+
+  <h2><a name="__Models">Models</a></h2>
+  [ Jump to <a href="#__Methods">Methods</a> ]
+
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#Complex"><code>Complex</code> - </a></li>
+    <li><a href="#Job"><code>Job</code> - </a></li>
+    <li><a href="#LikelihoodSummary"><code>LikelihoodSummary</code> - </a></li>
+    <li><a href="#Model"><code>Model</code> - </a></li>
+    <li><a href="#ReactionLikelihood"><code>ReactionLikelihood</code> - </a></li>
+    <li><a href="#Session"><code>Session</code> - </a></li>
+  </ol>
+
+  <div class="model">
+    <h3><a name="Complex"><code>Complex</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">complex (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">type (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">probability (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Job"><code>Job</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">jid (optional)</div><div class="param-desc"><span class="param-type"><a href="#UUID">UUID</a></span>  format: uuid</div>
+<div class="param">job (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">calculate_probanno</div><div class="param-enum">gapfill_model</div>
+<div class="param">target (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> ID of the object targeted by the job (model for gap-filling, fasta_id for probanno) </div>
+<div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">Complete</div><div class="param-enum">Not Started</div><div class="param-enum">Failure</div><div class="param-enum">Running</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="LikelihoodSummary"><code>LikelihoodSummary</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">fasta_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Model"><code>Model</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>a CobraPy Model in JSON format. See cobra.io.json for more info</div>
+    <div class="field-items">
+          </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ReactionLikelihood"><code>ReactionLikelihood</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">reaction (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">type (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">gpr (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">probability (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+<div class="param">complexes (optional)</div><div class="param-desc"><span class="param-type"><a href="#Complex">array[Complex]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Session"><code>Session</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>Unique session identifier</div>
+    <div class="field-items">
+          </div>  <!-- field-items -->
+  </div>
+  </body>
+</html>

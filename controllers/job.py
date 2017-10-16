@@ -19,13 +19,13 @@ PROBANNO_COMPLETE_URL = '/view/probanno/complete'
 
 class Job:
 
-    def __init__(self, session_id, job, target, dummy=False):
+    def __init__(self, session_id, job, target, status=NOT_STARTED, dummy=False):
         self.id = str(uuid.uuid4())
-        self.status = NOT_STARTED
+        self.status = status
         self.job = job
         self.session = session_id
         self.target = target
-        self.status = NOT_STARTED
+        self.status = status
         if not dummy:
             self.update_job()
 
@@ -66,15 +66,18 @@ class Job:
         return job
 
 
-
-
-def check_job():
-    if JOB_ID in request.args:
-        job = db.find_by_id(db.JOB, request.args[JOB_ID])
-    elif JOB_ID in request.form:
-        job = db.find_by_id(db.JOB, request.form[JOB_ID])
+def check_job(job_id=None):
+    if job_id is None:
+        if JOB_ID in request.args:
+            job = db.find_by_id(db.JOB, request.args[JOB_ID])
+        elif JOB_ID in request.form:
+            job = db.find_by_id(db.JOB, request.form[JOB_ID])
+        else:
+            raise InvalidUsage("Must Supply a job ID")
     else:
-        raise InvalidUsage("Must Supply a job ID")
+        job = db.find_by_id(db.JOB, job_id)
+    if job is None:
+        abort(404)
     return json.dumps(job[-1])  # last column is status
 
 
@@ -106,8 +109,9 @@ def list_jobs():
     return jsonify(jobs)
 
 
-def view_status():
-    job_id = request.args['job_id'] if 'job_id' in request.args else (request.form['job_id'] if 'job_id' in request.form else None)
+def view_status(job_id=None):
+    if job_id is None:
+        job_id = request.args['job_id'] if 'job_id' in request.args else (request.form['job_id'] if 'job_id' in request.form else None)
     if job_id is None:
         return InvalidUsage("Must specify a job ID")
     job_entry = db.find_by_id(db.JOB, job_id)

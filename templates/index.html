@@ -11,71 +11,16 @@
 
 </head>
 
-<body onload="listModels('models_tbody'); listProbannos('probannos_tbody'); listJobs('jobs_tbody', 'jobs_table')">
+<body>
   <header role="banner">
     <img class="ProbAnnoLogo" src="../static/ProbAnnoBanner.png" alt="Image of systems biology network. Text reads 'ProbAnno - Probabilistic annotation tool for metabolic modeling'.">
   </header>
-  <div id="jobs_table" class="wrapper">
-        <fieldset style="display: inline-block; width: 45%; vertical-align: center; horiz-align: center">
-      <legend> Check Status of your previously submitted jobs: </legend>
-        <div id="jobs_wrapper" class="dataTables_wrapper">
-        <div class="dataTables_scroll">
-            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;">
-                <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; padding-right: 0px;">
-                    <table class="display dataTable" cellspacing="8" width="100%" role="grid" style="margin-left: 0px;">
-                        <thead width="100%">
-						    <tr role="row">
-                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-sort="ascending" aria-label="Name: activate to sort column descending">Target</th>
-                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-label="Position: activate to sort column ascending">Job Type</th>
-                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-label="Position: activate to sort column ascending">Status</th>
-                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-label="Position: activate to sort column ascending"></th>
-                            </tr>
-					    </thead>
-                    </table>
-                </div>
-            </div>
-            <div id="jobs_div" class="dataTables_scrollBody" style="position: relative; overflow: auto; max-height: 200px; width: 100%;">
-                <table id="jobs" class="display dataTable" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
-                    <thead>
-                        <tr role="row" style="height: 0px;">
-                            <th class="sorting_asc" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="Name: activate to sort column descending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">FASTA ID</div></th>
-                            <th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Position: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Reaction Likelihoods</div></th>
-                        </tr>
-                    </thead>
-                    <tbody id="jobs_tbody"></tbody>
-                    <tfoot>
-                        <tr style="height: 0px;">
-                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 137px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Target</div></th>
-                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 214px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Job Type</div></th>
-                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 214px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Status</div></th>
-                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 214px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;"></div></th>
-                        </tr>
-                    </tfoot>
-
-                </table>
-            </div>
-            <div class="dataTables_scrollFoot" style="overflow: hidden; border: 0px; width: 100%;">
-                <div class="dataTables_scrollFootInner" style="padding-right: 0px;">
-                    <table class="display dataTable" cellspacing="0" width="100%" role="grid" style="margin-left: 0px;">
-                        <tfoot>
-                            <tr>
-                                <th rowspan="1" colspan="1" style="width: 50%;"></th>
-                                <th rowspan="1" colspan="1" style="width: 50%;"></th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-  </fieldset>
-  </div class="closesWrapper">
   <div class="wrapper">
     <fieldset>
       <legend>
         ProbAnno parameter input:
       </legend>
-      <form id="runProbAnno" role="search" enctype="multipart/form-data" method="post" action="">
+      <form id="runProbAnno" role="search" enctype="multipart/form-data" method="get" action="">
         <div class="wrapper">
           <div class="leftSide">
             <h4>1) Input proteome for probabilistic annotation</h4>
@@ -125,8 +70,9 @@
                     <table class="display dataTable" cellspacing="8" width="100%" role="grid" style="margin-left: 0px;">
                         <thead width="100%">
 						    <tr role="row">
-                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-sort="ascending" aria-label="Name: activate to sort column descending">FASTA ID</th>
-                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-label="Position: activate to sort column ascending">Reaction Likelihoods</th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 25%;" aria-sort="ascending" aria-label="Name: activate to sort column descending">FASTA ID</th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 50%;" aria-sort="ascending" aria-label="Name: activate to sort column descending">Name</th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 25%;" aria-label="Position: activate to sort column ascending">Reaction Likelihoods</th>
                             </tr>
 					    </thead>
                     </table>
@@ -136,8 +82,9 @@
                 <table id="probanno" class="display dataTable" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
                     <thead>
                         <tr role="row" style="height: 0px;">
-                            <th class="sorting_asc" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="Name: activate to sort column descending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">FASTA ID</div></th>
-                            <th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Position: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Reaction Likelihoods</div></th>
+                            <th class="sorting_asc" aria-controls="example" rowspan="1" colspan="1" style="width: 25%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="Name: activate to sort column descending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">FASTA ID</div></th>
+                            <th class="sorting_asc" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="Name: activate to sort column descending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Name</div></th>
+                            <th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 25%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Position: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Reaction Likelihoods</div></th>
                         </tr>
                     </thead>
                     <tbody id="probannos_tbody">
@@ -145,6 +92,7 @@
                     <tfoot>
                         <tr style="height: 0px;">
                             <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 137px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">FASTA ID</div></th>
+                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 137px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Name</div></th>
                             <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 214px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Reaction Likelihoods</div></th>
                         </tr>
                     </tfoot>
@@ -230,11 +178,68 @@
       </legend>
         <form method=post enctype=multipart/form-data id="formUploadModel">
             <input type=file name="file">
-            <input type="text" id="upload_model_id" name="upload_model_id"/>
-            <label for="upload_model_id">Model ID (optional, inferred from file if blank)</label>
+            <input type="text" id="model_id" name="model_id"/>
+            <label for="model_id">Model ID (optional, inferred from file if blank)</label>
             <input type=submit value=Upload>
         </form>
     </fieldset>
+  </div class="closesWrapper">
+    <div id="jobs_table" class="wrapper">
+        <fieldset style="display: inline-block; width: 45%; vertical-align: center; horiz-align: center">
+      <legend> Check Status of your previously submitted jobs: </legend>
+        <div id="jobs_wrapper" class="dataTables_wrapper">
+        <div class="dataTables_scroll">
+            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; padding-right: 0px;">
+                    <table class="display dataTable" cellspacing="8" width="100%" role="grid" style="margin-left: 0px;">
+                        <thead width="100%">
+						    <tr role="row">
+                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 20%;" aria-sort="ascending" aria-label="Name: activate to sort column descending">Target</th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 30%;" aria-label="Position: activate to sort column ascending">Job Type</th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 30%;" aria-label="Position: activate to sort column ascending">Status</th>
+                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 20%;" aria-label="Position: activate to sort column ascending">Action</th>
+                            </tr>
+					    </thead>
+                    </table>
+                </div>
+            </div>
+            <div id="jobs_div" class="dataTables_scrollBody" style="position: relative; overflow: auto; max-height: 200px; width: 100%;">
+                <table id="jobs" class="display dataTable" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+                    <thead>
+                        <tr role="row" style="height: 0px;">
+                            <th class="sorting_asc" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-sort="ascending" aria-label="Name: activate to sort column descending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Target</div></th>
+                            <th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Position: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Job Type</div></th>
+                            <th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Position: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Status</div></th>
+                            <th class="sorting" aria-controls="example" rowspan="1" colspan="1" style="width: 50%; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;" aria-label="Position: activate to sort column ascending"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Action</div></th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobs_tbody"></tbody>
+                    <tfoot>
+                        <tr style="height: 0px;">
+                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 137px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Target</div></th>
+                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 214px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Job Type</div></th>
+                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 214px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Status</div></th>
+                            <th rowspan="1" colspan="1" style="padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px; width: 214px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;">Action</div></th>
+                        </tr>
+                    </tfoot>
+
+                </table>
+            </div>
+            <div class="dataTables_scrollFoot" style="overflow: hidden; border: 0px; width: 100%;">
+                <div class="dataTables_scrollFootInner" style="padding-right: 0px;">
+                    <table class="display dataTable" cellspacing="0" width="100%" role="grid" style="margin-left: 0px;">
+                        <tfoot>
+                            <tr>
+                                <th rowspan="1" colspan="1" style="width: 50%;"></th>
+                                <th rowspan="1" colspan="1" style="width: 50%;"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+  </fieldset>
   </div class="closesWrapper">
   <div id="messages" class="wrapper"></div class="closesWrapper">
   <div id="downloadLink"></div>
@@ -245,9 +250,13 @@
   <script src="{{url_for('static', filename='js/flask_probanno.js')}}"></script>
   <script>
       window.onload = function() {
-          document.getElementById("submitProbannoCalculate").formAction = getRootURL() + "/api/probanno/calculate";
-          document.getElementById("formUploadModel").action = getRootURL() + "/api/io/uploadmodel";
+          document.getElementById("submitProbannoCalculate").formAction = getRootURL() + "/submit/probanno/calculate";
+          document.getElementById("formUploadModel").action = getRootURL() + "/submit/model/upload";
+          listModels('models_tbody');
+          listProbannos('probannos_tbody');
+          listJobs('jobs_tbody', 'jobs_table');
       }
+
   </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <script src="{{url_for('static', filename='js/jquery.dataTables.min.js')}}"></script>

@@ -44,9 +44,10 @@ def get_reaction_probabilities(app, fasta_id=None, fasta_file=None):
         if fasta_id is not None and fasta_id != '':
             likelihoods = db.find_probanno(fasta_id)
             if likelihoods is not None:
-                job = Job(session, CALCULATE_PROBANNO_JOB, fasta_id, dummy=True)
-                db.insert_probanno_record(fasta_id, session, likelihoods[2])
-                job.status = COMPLETE
+                job = Job(session, CALCULATE_PROBANNO_JOB, fasta_id, status=COMPLETE)
+                # add a record of us calculating this job unless we already have
+                if db.retrieve_probanno(session, fasta_id) is None:
+                    db.insert_probanno_record(fasta_id, session, likelihoods[2])
                 return jsonify(job.to_dict_dto())
         # download fasta file from Uniprot and continue
         try:
