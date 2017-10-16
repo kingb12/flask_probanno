@@ -219,7 +219,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Model"
+            $ref: "#/definitions/MetabolicModel"
         400:
           description: "No session, bad session, or missing arguments"
         404:
@@ -255,7 +255,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Model"
+            $ref: "#/definitions/MetabolicModel"
         400:
           description: "No session, bad session, or missing arguments"
         404:
@@ -291,7 +291,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Model"
+            $ref: "#/definitions/MetabolicModel"
         400:
           description: "No session, bad session, or missing arguments"
         404:
@@ -320,7 +320,7 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Model"
+            $ref: "#/definitions/MetabolicModel"
         400:
           description: "No session, bad session, or missing arguments"
         404:
@@ -512,7 +512,7 @@ definitions:
       probability:
         type: "number"
         example: 0.55
-  Model:
+  MetabolicModel:
     type: "object"
     description: "a CobraPy Model in JSON format. See cobra.io.json for more info"
 externalDocs:
