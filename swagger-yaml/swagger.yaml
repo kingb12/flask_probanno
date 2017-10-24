@@ -486,7 +486,7 @@ definitions:
           \ GN=MJ0679 PE=5 SV=1"
       probability:
         type: "number"
-        example: 0.88585
+        example: 0.885850000000000026290081223123706877231597900390625
       complexes:
         type: "array"
         items:
@@ -511,7 +511,7 @@ definitions:
         example: "CPLX_PARTIAL_1_of_2"
       probability:
         type: "number"
-        example: 0.55
+        example: 0.5500000000000000444089209850062616169452667236328125
   MetabolicModel:
     type: "object"
     description: "a CobraPy Model in JSON format. See cobra.io.json for more info"
