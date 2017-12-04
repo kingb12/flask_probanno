@@ -216,12 +216,14 @@ def job_status(job_id=None):
 
 @app.route('/swagger')
 def spec():
-    # TODO: Renders the template indicating the API specification. Make sure the HTML file is up to date!
     return make_response(redirect("https://app.swaggerhub.com/apis/kingb12/ProbannoWeb/1.0.0"))
 
 @app.route('/api')
 def api_base():
     return spec()
+@app.route('/walkthrough')
+def walkthorugh_redirect():
+    return make_response(redirect("https://github.com/PriceLab/probannopy/blob/master/ProbannoWebandProbannopyExplained.md"))
 
 @app.route('/about')
 def _about():
