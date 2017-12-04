@@ -4,13 +4,13 @@
 
 // ============== STRING CONSTANTS (e.g. root URL, API links, etc.) ====================================================
 
-const ROOT_URL = "http://127.0.0.1:5000";
+const ROOT_URL = "http://probannoweb.systemsbiology.net";
 const LIST_MODELS_ENDPOINT = "/api/model/list";
 const LIST_PROBANNOS_ENDPOINT = "/api/probanno/list";
 const LIST_JOBS_ENDPOINT = "/api/job/list";
 const GAPFILL_MODEL_ENDPOINT = "/gapfillmodel";
-const DOWNLOAD_PROBANNO_ENDPOINT = "/api/io/downloadprobanno";
-const DOWNLOAD_MODEL_ENDPOINT = "/api/io/downloadmodel";
+const DOWNLOAD_PROBANNO_ENDPOINT = "/api/probanno/download";
+const DOWNLOAD_MODEL_ENDPOINT = "/api/model/download";
 const CHECK_JOB_ENDPOINT = "/api/job/checkjob";
 const VIEW_JOB_ENDPOINT = "/view/job/status";
 const RUN_PROBANNO_ENDPOINT = "/api/probanno/calculate";

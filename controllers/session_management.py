@@ -17,6 +17,8 @@ def has_session():
 
 
 def get_session_id():
+    with open('/tmp/test.log', 'w') as f:
+        f.write(str(request.headers))
     # print "get session cookie: ", request.cookies.get(SESSION_ID)
     # can either be a header or a cookie, default to header
     sesh = ((session.get_session(request.headers.get(SESSION_ID))) or

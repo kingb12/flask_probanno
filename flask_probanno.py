@@ -10,6 +10,7 @@ import data.database as db
 from controllers import session_management, model_management, probanno_management, job
 
 import ConfigParser
+import sys
 
 PUT = 'PUT'
 POST = 'POST'
@@ -20,7 +21,11 @@ UPLOAD_FOLDER = '/tmp/'
 MODEL_TEMPLATES_FOLDER = '/probannoenv/src/probanno/templates/'
 UNIVERSAL_MODELS_FOLDER = '/data/universal/'
 ALLOWED_EXTENSIONS = {'json', 'fasta', 'fa'}
-SOLVER = 'cplex'
+SOLVER = 'gurobi'
+
+os.environ["GUROBI_HOME"] = "/users/bking/gurobi751/linux64"
+os.environ["LD_LIBRARY_PATH"] = os.environ["LD_LIBRARY_PATH"] + ":" + os.environ["GUROBI_HOME"] if "LD_LIBRARY_PATH" in os.environ else os.environ["GUROBI_HOME"]
+sys.path.append(os.environ["GUROBI_HOME"] + "/bin")
 
 # Set up on first run
 app = Flask(__name__)
@@ -138,7 +143,7 @@ def allowed_file(filename):
 
 
 # Hack for navigating from home form submit to probanno job page
-@app.route('/submit/probanno/calculate', methods=[POST])
+@app.route('/submit/probanno/calculate', methods=[POST, GET])
 def submit_probanno_calculate():
     response = get_reaction_probabilities()
     if response.status_code != 200:
@@ -200,7 +205,7 @@ def model_complete():
 @app.route('/aboutProbAnno.html')
 def about():
     # Displays an about page
-    return render_template("aboutProbAnno.html")
+    return _about()
 
 
 @app.route('/view/job/status')
@@ -214,7 +219,13 @@ def spec():
     # TODO: Renders the template indicating the API specification. Make sure the HTML file is up to date!
     return make_response(redirect("https://app.swaggerhub.com/apis/kingb12/ProbannoWeb/1.0.0"))
 
+@app.route('/api')
+def api_base():
+    return spec()
 
+@app.route('/about')
+def _about():
+    return render_template("aboutProbAnno.html")
 if __name__ == '__main__':
     app.run()
 

@@ -1,4 +1,5 @@
 import os
+import sys
 
 import models.cobra_modeling as cobra_modeling
 import probanno_management
@@ -90,8 +91,13 @@ def _async_gapfill_model(job, output_id, session_id, model, universal_model_file
     job.start()
     try:
         universal_model = cobra_modeling.get_universal_model(universal_model_file)
-        model.solver = solver
-        universal_model.solver = solver
+        if solver == 'gurobi':
+            from optlang import gurobi_interface
+            model.solver = gurobi_interface
+            universal_model.solver = gurobi_interface
+        else:
+            model.solver = solver
+            universal_model.solver = solver
         reactions = cobra_modeling.gapfill_model(model, universal_model, likelihoods)[0]
         if addReactions:
             model.add_reactions([universal_model.reactions.get_by_id(r.id) for r in reactions if
